@@ -148,7 +148,8 @@ public class InitializeGA {
             {
                 for(int g=0; g < ((Subject) ReadData.subjectList.get(s)).getGroupList().size(); g++)
                 {
-                    if(((Group)((Subject) ReadData.subjectList.get(s)).getGroupList().get(g)).getCode().equalsIgnoreCase(((Timetable)ReadData.tGroupList.get(t)).getName().trim())) {
+                    if(((Group)((Subject) ReadData.subjectList.get(s)).getGroupList().get(g)).getCode().equalsIgnoreCase(((Timetable)ReadData.tGroupList.get(t)).getName().trim()))
+                    {
 
                         Random rg = new Random();
                         int dayTuto = rg.nextInt(5 );
@@ -160,10 +161,11 @@ public class InitializeGA {
                         int dayLab = rg.nextInt(5 );
                         int timeLab = rg.nextInt(10 - ((Subject) ReadData.subjectList.get(s)).getLabHour());
 
-                        if(     (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayTuto,timeTuto,((Subject) ReadData.subjectList.get(s)).getTutoHour())) &&
-                                (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayLect,timeLect,((Subject) ReadData.subjectList.get(s)).getLectHour()))  &&
-                                (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayLab,timeLab,((Subject) ReadData.subjectList.get(s)).getLabHour()))
-                                )
+//                        if(     (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayTuto,timeTuto,((Subject) ReadData.subjectList.get(s)).getTutoHour())) &&
+//                                (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayLect,timeLect,((Subject) ReadData.subjectList.get(s)).getLectHour()))  &&
+//                                (((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(dayLab,timeLab,((Subject) ReadData.subjectList.get(s)).getLabHour()))
+//                                )
+                        if(true)
                         {
                             //------------------ASSIGN TUTORIAL---------------------------------------------------------------------
                             Information info = new Information();
@@ -171,9 +173,7 @@ public class InitializeGA {
                             info.setSubjectCode(((Subject) ReadData.subjectList.get(s)).getCode().trim());
                             info.setStudnum(((Group) ((Subject) ReadData.subjectList.get(s)).getGroupList().get(g)).getStudNum());
                             //info.setLecturer(((Timetable) ReadData.tLecturerList.get(lectIndex)).getName());
-                            if(((Subject) ReadData.subjectList.get(s)).getTutoHour() != 0){
                                 ((Timetable) ReadData.tGroupList.get(t)).setTimeslot(info, dayTuto, timeTuto, ((Subject) ReadData.subjectList.get(s)).getTutoHour());
-                            }
                             //------------------END ASSIGN TUTORIAL---------------------------------------------------------------------
 
                             //------------------ASSIGN LECTURE---------------------------------------------------------------------
@@ -182,9 +182,7 @@ public class InitializeGA {
                             info.setSubjectCode(((Subject) ReadData.subjectList.get(s)).getCode().trim());
                             info.setStudnum(((Group) ((Subject) ReadData.subjectList.get(s)).getGroupList().get(g)).getStudNum());
                             //info.setLecturer(((Timetable) ReadData.tLecturerList.get(lectIndex)).getName());
-                            if(((Subject) ReadData.subjectList.get(s)).getLectHour() != 0){
                                 ((Timetable) ReadData.tGroupList.get(t)).setTimeslot(info, dayLect, timeLect, ((Subject) ReadData.subjectList.get(s)).getLectHour());
-                            }
                             //------------------END ASSIGN LECTURE---------------------------------------------------------------------
 
                             //------------------ASSIGN LAB---------------------------------------------------------------------
@@ -193,9 +191,7 @@ public class InitializeGA {
                             info.setSubjectCode(((Subject) ReadData.subjectList.get(s)).getCode().trim());
                             info.setStudnum(((Group) ((Subject) ReadData.subjectList.get(s)).getGroupList().get(g)).getStudNum());
                             //info.setLecturer(((Timetable) ReadData.tLecturerList.get(lectIndex)).getName());
-                            if(((Subject) ReadData.subjectList.get(s)).getLabHour() != 0){
                                 ((Timetable) ReadData.tGroupList.get(t)).setTimeslot(info, dayLab, timeLab, ((Subject) ReadData.subjectList.get(s)).getLabHour());
-                            }
                             //------------------END ASSIGN LAB---------------------------------------------------------------------
                         }
                         else{
@@ -300,19 +296,51 @@ public class InitializeGA {
         //slotted
         for(int i = 0; i < ReadData.tGroupList.size(); i++)
         {
-           Timetable group = (Timetable) ReadData.tGroupList.get(i);
-           Information info;
-           for(int day = 0; day<5; day++)
-           {
-               for(int time = 0; time<10; time++)
-               {
-                   if(group.getTimeslot(day,time) != null) {
-                       info = (Information) group.getTimeslot(day, time);
-                       System.out.println(info.toString() + " " + dayTranslate(day)+ " "+ timeTranslate(time));
-                       count++;
-                   }
-               }
-           }
+//           Timetable group = (Timetable) ReadData.tGroupList.get(i);
+//           Information info;
+//           for(int day = 0; day<5; day++)
+//           {
+//               for(int time = 0; time<10; time++)
+//               {
+//                   if(group.getTimeslot(day,time) != null) {
+//                       info = (Information) group.getTimeslot(day, time);
+//                       System.out.println(info.toString() + " " + dayTranslate(day)+ " "+ timeTranslate(time));
+//                       count++;
+//                   }
+//               }
+//           }
+
+            //*******************************************
+
+
+
+            System.out.println("\n\n");
+            Timetable group = (Timetable) ReadData.tGroupList.get(i);
+            System.out.println(group.getName());
+            String timetable = String.format("%-15s","DAY / TIME");
+//            for(int x = 0; x <10; x++) {
+//
+//                timetable += String.format("%-15s",timeTranslate(x));
+//
+//            }
+            for(int day =0; day <5; day++)
+            {
+                timetable += "\n" + String.format("%-15s",dayTranslate(day));
+                for(int time = 0; time <10; time++){
+
+                    if(group.getTimeslot(day,time) != null){
+                        count++;
+                        Information info = (Information) group.getTimeslot(day, time);
+                        timetable +=  String.format("%-15s", info.getSubjectCode() );
+                    }
+                    else
+                    {
+                        timetable += String.format("%-15s","EMPTY");
+                    }
+                }
+                System.out.println(timetable);
+            }
+            //*******************************************
         }
         //unslotted
 //        for(int i=0; i < reader.tGroupList.size(); i++)
