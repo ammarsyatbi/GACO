@@ -32,7 +32,7 @@ public class Timetable {
         {
             if(timeslot[day][i] != null)
             {
-                System.out.println(name + " " +timeslot[day][i].getSubjectCode() + " TAKEN " + day +" "+ time + " - " + block);
+                //System.out.println(name + " " +timeslot[day][i].getSubjectCode() + " TAKEN " + day +" "+ time + " - " + block);
                 return false;
             }
         }

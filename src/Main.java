@@ -7,8 +7,7 @@ import java.util.Scanner;
 //Population size = 808; based on real data, cleaned and ready for calculation.
 public class Main {
 
-    public static void main(String args[]) throws FileNotFoundException
-    {
+    public static void main(String args[]) throws FileNotFoundException, InterruptedException {
         InitializeGA ga = new InitializeGA();
 
 
