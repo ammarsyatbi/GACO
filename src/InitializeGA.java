@@ -524,7 +524,7 @@ public class InitializeGA {
                             count++;
                             Information temp = (Information) ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day,time);
                             temp.addFitness();
-                            System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" In" + ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
+                            //System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" In" + ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
 
                         }
                     }
@@ -537,31 +537,31 @@ public class InitializeGA {
 //                            System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" In 5   "+ ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
 //                        }
 //                    }
-                    else if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,time)))
-                    {
-
-                        System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" NotIn  " + ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
-                    }
-//
-//                    //calculate gapss
-//                    if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,time)))
+//                    else if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,time)))
 //                    {
 //
-//                        for(int i = time-1; i >=0; i--)
-//                        {
-//                            if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,i)))
-//                            {
-//                                int fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
-//                                int gap = Math.abs(time-(i+1));
-//                                System.out.println( "GAP : " + gap);
-//                                System.out.println( "\t In GAP : " + fit);
-//                                //(((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
-//                                fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
-//                                System.out.println( "\t out GAP : " + fit);
-//                               break;
-//                            }
-//                        }
-//                    } // end calculate gaps
+//                        System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" NotIn  " + ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
+//                    }
+////
+                    //calculate gapss
+                    if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,time)))
+                    {
+                        //hok belakey
+                        for(int i = time-1; i >=0; i--)
+                        {
+                            if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,i)))
+                            {
+                                int fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                int gap = Math.abs(time-i-1);
+                                System.out.println( "GAP : " + gap);
+                                System.out.println( "\t In GAP : " + fit);
+                                (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
+                                fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                System.out.println( "\t out GAP : " + fit);
+                               break;
+                            }
+                        }
+                    } // end calculate gaps
                 }
             }
             ((Timetable)ReadData.tGroupList.get(t)).countFitness();

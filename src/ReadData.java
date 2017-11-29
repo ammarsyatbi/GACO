@@ -27,6 +27,7 @@ public class ReadData {
         lecturerList = new ArrayList();
         tGroupList = new ArrayList();
         tLecturerList = new ArrayList();
+        tKelasList = new ArrayList();
         assignSubjectlist();
         assignGroupSize();
         clearMissingValue();
@@ -57,7 +58,7 @@ public class ReadData {
 
     public static void readRoomlist() throws FileNotFoundException
     {
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\lecturerSubject.csv"));
+        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\roomlist.csv"));
         scanner.useDelimiter(",|\\n");
         String kelas;
         int kelasCap;
