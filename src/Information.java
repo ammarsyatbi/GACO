@@ -4,7 +4,12 @@ public class Information {
     int studnum;
     String lecturer;
     String kelas;
+    int kelasCap;
+    char kelasType;
     String type;
+
+    int fitness;
+
 
 
 
@@ -14,14 +19,23 @@ public class Information {
         this.studnum = 0;
         this.lecturer = "";
         this.kelas = "";
+        this.fitness = 0;
+        this.type = "";
+
     }
 
-    public Information(String subjectCode, String group, int studnum, String lecturer, String kelas) {
-        this.subjectCode = subjectCode;
-        this.group = group;
-        this.studnum = studnum;
-        this.lecturer = lecturer;
-        this.kelas = kelas;
+
+    public int getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(int fitness) {
+        this.fitness = fitness;
+    }
+    public void addFitness()
+    {
+        System.out.println(subjectCode + " add call");
+        this.fitness++;
     }
 
     public String getType() {

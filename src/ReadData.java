@@ -34,6 +34,7 @@ public class ReadData {
         assignTimetable();
         System.out.println("Subject size = "+subjectList.size());
         readLecturer();
+        readRoomlist();
 
         Subject tempSub;
         Group tempGroup;
@@ -53,6 +54,25 @@ public class ReadData {
 */
 
     }//End of Main
+
+    public static void readRoomlist() throws FileNotFoundException
+    {
+        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\lecturerSubject.csv"));
+        scanner.useDelimiter(",|\\n");
+        String kelas;
+        int kelasCap;
+        char kelasType;
+
+        while(scanner.hasNext())
+        {
+            kelas = scanner.next();
+            kelasCap = Integer.parseInt(scanner.next().trim());
+            kelasType = scanner.next().trim().charAt(0);
+
+            Kelas temp = new Kelas(kelas,kelasCap,kelasType);
+            tKelasList.add(temp);
+        }
+    }
 
     public static void readLecturer() throws FileNotFoundException
     {
