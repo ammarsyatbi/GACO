@@ -1,8 +1,10 @@
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.beans.binding.BooleanExpression;
 
 import javax.sound.sampled.Line;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,7 +12,7 @@ public class InitializeGA {
 
     //public static ReadData reader;
     public static ArrayList allTimeTable;
-    public InitializeGA() throws FileNotFoundException, InterruptedException
+    public InitializeGA() throws IOException, InterruptedException
     {
 
         allTimeTable = new ArrayList<>();
@@ -141,7 +143,7 @@ public class InitializeGA {
         System.out.println(" Groupmatched subject == timetable : " + groupMatched);
     }
 
-    public static void assignTT() throws InterruptedException, FileNotFoundException {
+    public static void assignTT() throws InterruptedException, IOException {
 
         int notIn;
 
@@ -176,6 +178,13 @@ public class InitializeGA {
                                     dayTuto = new Random().nextInt(5);
                                     timeTuto = new Random().nextInt(11 - ((Subject) ReadData.subjectList.get(s)).getTutoHour());
                                 }
+                            }
+
+                            kelasIndex = rg.nextInt(ReadData.tKelasList.size());
+                            //TODO : Check null dalam kelas
+                            while(!((Timetable)ReadData.tKelasList.get(kelasIndex)).checkTimeslot(dayTuto,timeTuto))
+                            {
+                                kelasIndex = rg.nextInt(ReadData.tKelasList.size());
                             }
                             if ((((Timetable) ReadData.tGroupList.get(t)).checkTimeslot(dayTuto, timeTuto, ((Subject) ReadData.subjectList.get(s)).getTutoHour()))) {
                                 //------------------ASSIGN TUTORIAL---------------------------------------------------------------------
@@ -552,13 +561,28 @@ public class InitializeGA {
                             if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,i)))
                             {
                                 int fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
-                                int gap = Math.abs(time-i-1);
+                                int gap = Math.abs(time-i-1);// -1 sebab kalau 8-7 = 1 , supposely dorang bersebalahan takde gap
                                 System.out.println( "GAP : " + gap);
                                 System.out.println( "\t In GAP : " + fit);
                                 (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
                                 fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
                                 System.out.println( "\t out GAP : " + fit);
                                break;
+                            }
+                        }
+                        //hok depey
+                        for(int i = time+1; i <10; i++)
+                        {
+                            if(!(((Timetable)ReadData.tGroupList.get(t)).checkTimeslot(day,i)))
+                            {
+                                int fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                int gap = Math.abs(i-1-time);
+                                System.out.println( "GAP : " + gap);
+                                System.out.println( "\t In GAP : " + fit);
+                                (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
+                                fit = (((Timetable)ReadData.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                System.out.println( "\t out GAP : " + fit);
+                                break;
                             }
                         }
                     } // end calculate gaps

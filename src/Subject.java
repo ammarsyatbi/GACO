@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -70,12 +71,12 @@ public class Subject {
         this.groupList = groupList;
     }
 
-    public void assignGroup() throws FileNotFoundException
+    public void assignGroup() throws IOException
     {
 
         String fac, hari, mula, tamat, subCode, subName, groupCode, bilik, lectName, lectNum, subType;
 
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\jadual.csv"));
+        Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\jadual.csv"));
         scanner.useDelimiter(",|\\n");
         while(scanner.hasNext()) {
 
@@ -122,10 +123,10 @@ public class Subject {
     }
     int countMatched =0;
 
-    public void assignGroupSize() throws FileNotFoundException
+    public void assignGroupSize() throws IOException
     {
         //assign group size
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\group-organized.csv"));
+        Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\group-organized.csv"));
         scanner.useDelimiter(",|\\n");
 
 

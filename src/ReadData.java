@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,7 +20,7 @@ public class ReadData {
     public static  Timetable lecturer;
     public static  int populationSize;
 
-    ReadData() throws FileNotFoundException
+    ReadData() throws IOException
     {
 
         //List of subject
@@ -56,9 +57,9 @@ public class ReadData {
 
     }//End of Main
 
-    public static void readRoomlist() throws FileNotFoundException
+    public static void readRoomlist() throws IOException
     {
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\roomlist.csv"));
+        Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\roomlist.csv"));
         scanner.useDelimiter(",|\\n");
         String kelas;
         int kelasCap;
@@ -75,9 +76,9 @@ public class ReadData {
         }
     }
 
-    public static void readLecturer() throws FileNotFoundException
+    public static void readLecturer() throws IOException
     {
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\lecturerSubject.csv"));
+        Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\lecturerSubject.csv"));
         scanner.useDelimiter(",|\\n");
 
         String subCode;
@@ -175,9 +176,10 @@ public class ReadData {
     {
 
     }
-    public static void assignSubjectlist() throws FileNotFoundException
+    public static void assignSubjectlist() throws IOException
     {
-        Scanner scanner = new Scanner(new File("A:\\Codes\\Mars Java\\GACO\\subject-organized.csv"));
+        //System.out.println(new File(".").getCanonicalPath());
+        Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\subject-organized.csv"));
         scanner.useDelimiter(",|\\n");
 
         while(scanner.hasNext())
@@ -196,7 +198,7 @@ public class ReadData {
         scanner.close();
     }
 
-    public static void assignGroupSize() throws  FileNotFoundException
+    public static void assignGroupSize() throws IOException
     {
         int countMatchedGroup = 0;
         for(int i=0; i < subjectList.size(); i++)
