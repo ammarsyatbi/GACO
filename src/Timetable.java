@@ -79,11 +79,6 @@ public class Timetable {
     void setTimeslot(Information info, int day, int time, int block)
     {
 
-
-
-
-
-
         for(int i=time; i < time+block; i++)
         {
             //System.out.println("\t" +info.toString() + "Masuk");
