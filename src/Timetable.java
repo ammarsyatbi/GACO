@@ -86,7 +86,7 @@ public class Timetable {
 
         for(int i=time; i < time+block; i++)
         {
-            System.out.println("\t" +info.toString() + "Masuk");
+            //System.out.println("\t" +info.toString() + "Masuk");
             this.timeslot[day][i] = new Information();
 
             this.timeslot[day][i].setFitness(info.getFitness());
@@ -95,6 +95,7 @@ public class Timetable {
             this.timeslot[day][i].setSubjectCode(info.getSubjectCode());
             this.timeslot[day][i].setGroup(info.getGroup());
             this.timeslot[day][i].setType(info.getType());
+            this.timeslot[day][i].setKelas(info.getKelas());
         }
     }
 

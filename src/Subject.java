@@ -89,7 +89,7 @@ public class Subject {
             groupCode = scanner.next().trim();
             bilik = scanner.next();
             lectName = scanner.next();
-            lectNum = scanner.next();
+            //lectNum = scanner.next();
             subType = scanner.next();
 
            //

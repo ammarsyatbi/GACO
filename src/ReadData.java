@@ -11,6 +11,7 @@ public class ReadData {
 
     public static ArrayList subjectList;
     public static ArrayList lecturerList;
+    public static ArrayList kelasList;
     public static ArrayList tGroupList;
     public static ArrayList tLecturerList;
     public static ArrayList tKelasList;
@@ -26,6 +27,9 @@ public class ReadData {
         //List of subject
         subjectList = new ArrayList();
         lecturerList = new ArrayList();
+        kelasList = new ArrayList();
+
+
         tGroupList = new ArrayList();
         tLecturerList = new ArrayList();
         tKelasList = new ArrayList();
@@ -72,7 +76,11 @@ public class ReadData {
             kelasType = scanner.next().trim().charAt(0);
 
             Kelas temp = new Kelas(kelas,kelasCap,kelasType);
-            tKelasList.add(temp);
+            kelasList.add(temp);
+
+            Timetable tTemp = new Timetable();
+            tTemp.setName(kelas);
+            tKelasList.add(tTemp);
         }
     }
 
