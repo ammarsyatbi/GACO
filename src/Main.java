@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String args[]) throws IOException, InterruptedException {
-        InitializeGA ga = new InitializeGA();
 
+    new GeneticAlgorithm();
 
     }
 }

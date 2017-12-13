@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 
 //Population size = 808; based on real data, cleaned and ready for calculation.
-public class ReadData {
+public class Population {
 
     public static ArrayList subjectList;
     public static ArrayList lecturerList;
@@ -21,7 +21,7 @@ public class ReadData {
     public static  Timetable lecturer;
     public static  int populationSize;
 
-    ReadData() throws IOException
+    Population() throws IOException
     {
 
         //List of subject
