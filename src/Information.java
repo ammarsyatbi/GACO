@@ -1,14 +1,28 @@
 public class Information {
+
+    //subject variable
     String subjectCode;
+    int subjectHour;
+
+    //group variable
     String group;
     int studnum;
+
+    //lecturer variable
     String lecturer;
+
+    //kelas variables
     String kelas;
     int kelasCap;
     char kelasType;
     String type;
 
     int fitness;
+
+    //indexes
+    int kelasIndex;
+    int groupIndex;
+    int lecturerIndex;
 
 
 
@@ -24,6 +38,53 @@ public class Information {
 
     }
 
+    public int getKelasIndex() {
+        return kelasIndex;
+    }
+
+    public void setKelasIndex(int kelasIndex) {
+        this.kelasIndex = kelasIndex;
+    }
+
+    public int getGroupIndex() {
+        return groupIndex;
+    }
+
+    public void setGroupIndex(int groupIndex) {
+        this.groupIndex = groupIndex;
+    }
+
+    public int getLecturerIndex() {
+        return lecturerIndex;
+    }
+
+    public void setLecturerIndex(int lecturerIndex) {
+        this.lecturerIndex = lecturerIndex;
+    }
+
+    public int getSubjectHour() {
+        return subjectHour;
+    }
+
+    public void setSubjectHour(int subjectHour) {
+        this.subjectHour = subjectHour;
+    }
+
+    public int getKelasCap() {
+        return kelasCap;
+    }
+
+    public void setKelasCap(int kelasCap) {
+        this.kelasCap = kelasCap;
+    }
+
+    public char getKelasType() {
+        return kelasType;
+    }
+
+    public void setKelasType(char kelasType) {
+        this.kelasType = kelasType;
+    }
 
     public int getFitness() {
         return fitness;
@@ -34,7 +95,7 @@ public class Information {
     }
     public void addFitness()
     {
-        System.out.println(subjectCode + " add call");
+        //System.out.println(subjectCode + " add call");
         this.fitness++;
     }
 
@@ -84,6 +145,16 @@ public class Information {
 
     public void setKelas(String kelas) {
         this.kelas = kelas;
+    }
+
+    public boolean checkSubCode(String subcode)
+    {
+        if(subcode.equalsIgnoreCase(this.subjectCode))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

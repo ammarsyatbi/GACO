@@ -20,6 +20,7 @@ public class Population {
     public static Timetable kelas;
     public static  Timetable lecturer;
     public static  int populationSize;
+    public static int populationFitness;
 
     Population() throws IOException
     {
@@ -60,6 +61,14 @@ public class Population {
 */
 
     }//End of Main
+
+    public static int getPopulationFitness() {
+        return populationFitness;
+    }
+
+    public static void setPopulationFitness(int populationFitness) {
+        Population.populationFitness = populationFitness;
+    }
 
     public static void readRoomlist() throws IOException
     {
