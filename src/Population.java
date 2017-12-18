@@ -9,18 +9,18 @@ import java.util.Scanner;
 //Population size = 808; based on real data, cleaned and ready for calculation.
 public class Population {
 
-    public static ArrayList subjectList;
-    public static ArrayList lecturerList;
-    public static ArrayList kelasList;
-    public static ArrayList tGroupList;
-    public static ArrayList tLecturerList;
-    public static ArrayList tKelasList;
+    private ArrayList subjectList;
+    private ArrayList lecturerList;
+    private ArrayList kelasList;
+    private ArrayList tGroupList;
+    private ArrayList tLecturerList;
+    private ArrayList tKelasList;
     //so i dont have to do parameters passing hehehe
-    public static Timetable group;
-    public static Timetable kelas;
-    public static  Timetable lecturer;
-    public static  int populationSize;
-    public static int populationFitness;
+    private Timetable group;
+    private Timetable kelas;
+    private Timetable lecturer;
+    private  int populationSize;
+    private int populationFitness;
 
     Population() throws IOException
     {
@@ -46,31 +46,97 @@ public class Population {
         Subject tempSub;
         Group tempGroup;
 
-/*
-        //Go through subject
-        for(int i=0; i < subjectList.size(); i++)
-        {
-            tempSub = (Subject)subjectList.get(i);
 
-            //go through group in the Subject
-            for(int j=0; j<tempSub.getGroupList().size(); j++)
-            {
-                tempGroup = (Group)tempSub.getGroupList().get(j);
-            }
-        }
-*/
 
     }//End of Main
 
-    public static int getPopulationFitness() {
-        return populationFitness;
+    public ArrayList getLecturerList() {
+        return this.lecturerList;
     }
 
-    public static void setPopulationFitness(int populationFitness) {
-        Population.populationFitness = populationFitness;
+    public void setLecturerList(ArrayList lecturerList) {
+        this.lecturerList = lecturerList;
     }
 
-    public static void readRoomlist() throws IOException
+    public ArrayList getKelasList() {
+        return kelasList;
+    }
+
+    public void setKelasList(ArrayList kelasList) {
+        this.kelasList = kelasList;
+    }
+
+    public Timetable getGroup() {
+        return this.group;
+    }
+
+    public void setGroup(Timetable group) {
+        this.group = group;
+    }
+
+    public Timetable getKelas() {
+        return this.kelas;
+    }
+
+    public void setKelas(Timetable kelas) {
+        this.kelas = kelas;
+    }
+
+    public Timetable getLecturer() {
+        return this.lecturer;
+    }
+
+    public void setLecturer(Timetable lecturer) {
+        this.lecturer = lecturer;
+    }
+
+    public ArrayList getSubjectList() {
+        return this.subjectList;
+    }
+
+    public void setSubjectList(ArrayList subjectList) {
+        this.subjectList = subjectList;
+    }
+
+    public ArrayList gettGroupList() {
+        return tGroupList;
+    }
+
+    public void settGroupList(ArrayList tGroupList) {
+        this.tGroupList = tGroupList;
+    }
+
+    public ArrayList gettLecturerList() {
+        return this.tLecturerList;
+    }
+
+    public void settLecturerList(ArrayList tLecturerList) {
+        this.tLecturerList = tLecturerList;
+    }
+
+    public ArrayList gettKelasList() {
+        return this.tKelasList;
+    }
+
+    public void settKelasList(ArrayList tKelasList) {
+        this.tKelasList = tKelasList;
+    }
+
+    public int getPopulationFitness() {
+        return this.populationFitness;
+    }
+
+    public void setPopulationFitness(int populationFitness)
+    {
+        this.populationFitness = populationFitness;
+    }
+
+
+
+
+    //END OF SETTER AND GETTER -------------------------------------------------------------------------------------
+
+    public void readRoomlist() throws IOException
     {
         Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\roomlist.csv"));
         scanner.useDelimiter(",|\\n");
@@ -93,7 +159,7 @@ public class Population {
         }
     }
 
-    public static void readLecturer() throws IOException
+    public void readLecturer() throws IOException
     {
         Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\lecturerSubject.csv"));
         scanner.useDelimiter(",|\\n");
@@ -139,7 +205,7 @@ public class Population {
         }
     }
 
-    public static void addLecturerSubject(String subCode,String name)
+    public void addLecturerSubject(String subCode,String name)
     {
         for(int i=0; i <lecturerList.size(); i++)
         {
@@ -152,7 +218,7 @@ public class Population {
         }
     }
 
-    public static boolean checkTimetableLecturerList(String name)
+    public boolean checkTimetableLecturerList(String name)
     {
         for(int i =0; i<tLecturerList.size(); i++)
         {
@@ -164,7 +230,7 @@ public class Population {
         }
         return false;
     }
-    public static boolean checkLecturerList(String name)
+    public boolean checkLecturerList(String name)
     {
         for(int i =0; i<lecturerList.size(); i++)
         {
@@ -177,7 +243,7 @@ public class Population {
         return false;
     }
     //end of read lecturer
-    public static void printSublist()
+    public void printSublist()
     {
         for(int i =0; i < subjectList.size(); i++)
         {
@@ -189,11 +255,8 @@ public class Population {
 
         }
     }
-    public static void assignTimeslot()
-    {
 
-    }
-    public static void assignSubjectlist() throws IOException
+    public void assignSubjectlist() throws IOException
     {
         //System.out.println(new File(".").getCanonicalPath());
         Scanner scanner = new Scanner(new File(new File(".").getCanonicalPath()+"\\subject-organized.csv"));
@@ -215,7 +278,7 @@ public class Population {
         scanner.close();
     }
 
-    public static void assignGroupSize() throws IOException
+    public void assignGroupSize() throws IOException
     {
         int countMatchedGroup = 0;
         for(int i=0; i < subjectList.size(); i++)
@@ -227,7 +290,7 @@ public class Population {
         }
         System.out.println(" list of subgroups "+countMatchedGroup);
     }
-    public static void clearMissingValue()
+    public void clearMissingValue()
     {
         int countTotalGroup= 0;
         for(int i =0; i < subjectList.size(); i++)
@@ -260,7 +323,7 @@ public class Population {
         System.out.println("Total cleaned group = " + countTotalGroup);
     }
 
-    public static boolean checkGroupList(String groupname)
+    public boolean checkGroupList(String groupname)
     {
         for(int i=0; i < tGroupList.size(); i++)
         {
@@ -274,7 +337,7 @@ public class Population {
         return true;
     }
 
-    public static void assignTimetable()//masukkan group  based on subject ke dalam arraylist
+    public void assignTimetable()//masukkan group  based on subject ke dalam arraylist
     {
         for(int i =0; i < subjectList.size(); i++)
         {
@@ -302,6 +365,17 @@ public class Population {
         }
 
 
+    }
+
+    public void calculateGroupFitness()
+    {
+        int totalFitness = 0;
+        for(int i =0; i < tGroupList.size(); i++)
+        {
+            totalFitness += ((Timetable)tGroupList.get(i)).getFitnessTimetable();
+        }
+
+        this.populationFitness = totalFitness;
     }
 
 

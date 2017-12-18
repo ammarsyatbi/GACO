@@ -20,6 +20,10 @@ public class Information {
     int fitness;
 
     //indexes
+    //ID timeslot
+    //key index
+    int day;
+    int time;
     int kelasIndex;
     int groupIndex;
     int lecturerIndex;
@@ -36,6 +40,22 @@ public class Information {
         this.fitness = 0;
         this.type = "";
 
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 
     public int getKelasIndex() {

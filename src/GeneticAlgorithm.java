@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GeneticAlgorithm {
 
@@ -6,35 +7,41 @@ public class GeneticAlgorithm {
     public final static int POPULATION_SIZE = 4;
 
     //---------------------------------------------------------------------
-    protected static Population pop[] = new Population[POPULATION_SIZE];
+     public Population pop[] = new Population[POPULATION_SIZE];
 
     public GeneticAlgorithm() throws IOException, InterruptedException {
         //INITIALIZE ALL POPULATION
+        manipluateObject();
         initializePopulation();
-        printAllFitness();
-        crossoverPMX();
+        calculateAllFitness();
         printAllFitness();
 
+        Mating();
+        Thread.sleep(1000);
+        //printAllTimetable(pop);
+        calculateAllFitness();
+        printAllFitness();
     }
 
-    private static void initializePopulation() throws IOException, InterruptedException {
+    private void initializePopulation() throws IOException, InterruptedException {
         for(int i =0; i <POPULATION_SIZE; i++){
 
-            new InitializeGA(pop[i]);
+            InitializeGA init= new InitializeGA();
+            pop[i] = init.getPopulation();
             System.out.println("\nPOPULATION ID : "+(i+1)+"\n");
             Thread.sleep(2000);
-            calculateFitness(pop[i]);
-            printTimetableGroup(pop[i]);
+            //printTimetableGroup(pop[i]);
         }
     }
-    private static void crossoverPMX()
-    {
+    private void Mating() throws InterruptedException {
         System.out.println("STARTING CROSSOVER ...");
-        new Crossover(pop);
+        Mating mating = new Mating(pop);
+
+        pop = mating.getPop();
 
     }
 
-    private static String dayTranslate(int day)
+    public static String dayTranslate(int day)
     {
         if(day == 0)
         {
@@ -46,7 +53,7 @@ public class GeneticAlgorithm {
         else if(day == 4){return "Friday";}
         else{return "Wrong day";}
     }
-    private static String timeTranslate(int time)
+    public static String timeTranslate(int time)
     {
         if(time == 0){return "8.00am";}
         else if (time == 1){return "9.00am";}
@@ -68,17 +75,32 @@ public class GeneticAlgorithm {
 
     public static void printTimetableGroup(Population population)
     {
-        System.out.println("Group size : " + population.tGroupList.size() + " Kelas size : " + population.tKelasList.size() + " Lecturer size : " + population.tLecturerList.size() );
+        ArrayList tGroupList;
+        ArrayList tKelasList;
+        ArrayList tLecturerList;
+
+        ArrayList subjectList;
+        ArrayList kelasList;
+        ArrayList lecturerList;
+        tGroupList = population.gettGroupList();
+        tKelasList= population.gettKelasList();
+        tLecturerList = population.gettLecturerList();
+
+        subjectList = population.getSubjectList();
+        kelasList = population.getKelasList();
+        lecturerList = population.getLecturerList();
+
+        System.out.println("Group size : " + tGroupList.size() + " Kelas size : " + tKelasList.size() + " Lecturer size : " + tLecturerList.size() );
         System.out.println("\n----------------------------PRINT TIMETABLE GROUP----------------------------------\n");
         int count =0;
         int totalFitness = 0;
 
         //slotted
-        for(int i = 0; i < population.tGroupList.size(); i++)
+        for(int i = 0; i < tGroupList.size(); i++)
         {
-            totalFitness += ((Timetable)population.tGroupList.get(i)).getFitnessTimetable();
+            totalFitness += ((Timetable)tGroupList.get(i)).getFitnessTimetable();
             System.out.println("\n\n");
-            Timetable group = (Timetable) population.tGroupList.get(i);
+            Timetable group = (Timetable) tGroupList.get(i);
             System.out.println(group.getName());
             String timetable = String.format("%-15s","DAY / TIME");
             for(int x = 0; x <10; x++) {
@@ -119,32 +141,40 @@ public class GeneticAlgorithm {
                 }
             }
             System.out.println(timetable);
-            System.out.println("Fitness : " + ((Timetable) population.tGroupList.get(i)).getFitnessTimetable());
+            System.out.println("Fitness : " + ((Timetable) tGroupList.get(i)).getFitnessTimetable());
         }
 
 
-        System.out.println("Total subject/group slotted : " + count +" | total distinct group  : "+ population.tGroupList.size() );
+        System.out.println("Total subject/group slotted : " + count +" | total distinct group  : "+ tGroupList.size() );
         System.out.println("Popluation fitness : " + totalFitness);
-        population.setPopulationFitness(totalFitness);
+        //population.setPopulationFitness(totalFitness);
     }
 
-    public static void calculateFitness(Population population)
+    public void calculateFitness(Population population)
     {
-        for(int t=0; t<population.tGroupList.size(); t++)
+        ArrayList groupList = population.gettGroupList();
+
+        for(int t=0; t<groupList.size(); t++)
         {
-            int count = 0;
-            System.out.println(((Timetable) population.tGroupList.get(t)).getName() );
+            Timetable timetable = (Timetable)groupList.get(t);
+            timetable.setFitness(0);
+            timetable.clearTimeslotFitness();
+            //System.out.println(((Timetable) population.tGroupList.get(t)).getName() );
             for(int day =0; day <5; day++)
             {
                 for(int time =0; time < 10; time++)
                 {
+                    if(((timetable).getTimeslot(day,time)) != null)
+                    {
+                        ((timetable).getTimeslot(day,time)).setFitness( 0);//clear lu, sebab di additive nnt makin banyak
+                    }
+
                     //pukul 12 - 2 denda
                     if(time == 4 || time ==5)
                     {
-                        if(!(((Timetable)population.tGroupList.get(t)).checkTimeslot(day,time)))
+                        if(!timetable.checkTimeslot(day,time))
                         {
-                            count++;
-                            Information temp = (Information) ((Timetable) population.tGroupList.get(t)).getTimeslot(day,time);
+                            Information temp = timetable.getTimeslot(day,time);
                             temp.addFitness();
                             //System.out.println(((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getFitness() + " |  " + day + " - " + time +" In" + ((Timetable) ReadData.tGroupList.get(t)).getTimeslot(day, time).getSubjectCode());
 
@@ -152,19 +182,19 @@ public class GeneticAlgorithm {
                     }
 
                     //calculate gapss
-                    if(!(((Timetable)population.tGroupList.get(t)).checkTimeslot(day,time)))
+                    if(!timetable.checkTimeslot(day,time))
                     {
                         //hok belakey
                         for(int i = time-1; i >=0; i--)
                         {
-                            if(!(((Timetable)population.tGroupList.get(t)).checkTimeslot(day,i)))
+                            if(!timetable.checkTimeslot(day,i))
                             {
-                                int fit = (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                int fit = ((timetable).getTimeslot(day,time)).getFitness();
                                 int gap = Math.abs(time-i-1);// -1 sebab kalau 8-7 = 1 , supposely dorang bersebalahan takde gap
                                 //System.out.println( "GAP : " + gap);
                                 //System.out.println( "\t In GAP : " + fit);
-                                (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
-                                fit = (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                ((timetable).getTimeslot(day,time)).setFitness( fit + gap) ;
+                                fit = ((timetable).getTimeslot(day,time)).getFitness();
                                 //System.out.println( "\t out GAP : " + fit);
                                 break;
                             }
@@ -172,14 +202,14 @@ public class GeneticAlgorithm {
                         //hok depey
                         for(int i = time+1; i <10; i++)
                         {
-                            if(!(((Timetable)population.tGroupList.get(t)).checkTimeslot(day,i)))
+                            if(!((timetable).checkTimeslot(day,i)))
                             {
-                                int fit = (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                int fit = ((timetable).getTimeslot(day,time)).getFitness();
                                 int gap = Math.abs(i-1-time);
                                 //System.out.println( "GAP : " + gap);
                                 //System.out.println( "\t In GAP : " + fit);
-                                (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).setFitness( fit + gap) ;
-                                fit = (((Timetable)population.tGroupList.get(t)).getTimeslot(day,time)).getFitness();
+                                ((timetable).getTimeslot(day,time)).setFitness( fit + gap) ;
+                                fit = ((timetable).getTimeslot(day,time)).getFitness();
                                 //System.out.println( "\t out GAP : " + fit);
                                 break;
                             }
@@ -187,10 +217,39 @@ public class GeneticAlgorithm {
                     } // end calculate gaps
                 }
             }
-            ((Timetable)population.tGroupList.get(t)).countFitness();
-            //System.out.println(((Timetable)ReadData.tGroupList.get(t)).getFitness()+" - " + count);
+            timetable.countFitness();
+        }
+        population.calculateGroupFitness();
+    }
+
+    public void calculateAllFitness()
+    {
+
+        for(int i =0; i < POPULATION_SIZE; i++)
+        {
+/*
+            trackiing error
+            System.out.println("\n Iteration : " + i);
+            printAllFitness();
+*/
+
+            calculateFitness(pop[i]);
         }
 
+    }
+
+    public void manipluateObject() throws IOException {
+        for(int i =0; i < POPULATION_SIZE; i++)
+        {
+            pop[i] = new Population();
+        }
+    }
+    public static void printAllTimetable(Population[] population)
+    {
+        for(int i =0; i < POPULATION_SIZE; i++)
+        {
+            printTimetableGroup(population[i]);
+        }
     }
 
     public void printAllFitness()
@@ -200,4 +259,6 @@ public class GeneticAlgorithm {
             System.out.println("Poppulation "+(i+1)+" : " + pop[i].getPopulationFitness());
         }
     }
+
+
 }

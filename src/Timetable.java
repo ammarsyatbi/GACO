@@ -85,12 +85,32 @@ public class Timetable {
             this.timeslot[day][i] = new Information();
 
             this.timeslot[day][i].setFitness(info.getFitness());
-            this.timeslot[day][i].setLecturer(info.getLecturer());
-            this.timeslot[day][i].setStudnum(info.getStudnum());
-            this.timeslot[day][i].setSubjectCode(info.getSubjectCode());
+
+            //Group
             this.timeslot[day][i].setGroup(info.getGroup());
-            this.timeslot[day][i].setType(info.getType());
+            this.timeslot[day][i].setStudnum(info.getStudnum());
+
+            //Kelas
             this.timeslot[day][i].setKelas(info.getKelas());
+            this.timeslot[day][i].setKelasType(info.getKelasType());
+            this.timeslot[day][i].setKelasCap(info.getKelasCap());
+
+            //Lecturer
+            this.timeslot[day][i].setLecturer(info.getLecturer());
+
+            //Subject
+            this.timeslot[day][i].setSubjectCode(info.getSubjectCode());
+            this.timeslot[day][i].setSubjectHour(info.getSubjectHour());
+            this.timeslot[day][i].setType(info.getType());
+
+
+            //index
+            this.timeslot[day][i].setDay(info.getDay());
+            this.timeslot[day][i].setTime(info.getTime());
+            this.timeslot[day][i].setGroupIndex(info.getGroupIndex());
+            this.timeslot[day][i].setLecturerIndex(info.getLecturerIndex());
+            this.timeslot[day][i].setKelasIndex(info.getKelasIndex());
+
         }
     }
 
@@ -109,6 +129,23 @@ public class Timetable {
         }
 
         this.fitnessTimetable = count;
+    }
+
+    public void clearTimeslotFitness()
+    {
+        for(int i=0; i<5; i++)
+        {
+            for(int j=0; j<10; j++)
+            {
+                if(this.timeslot[i][j] != null) {
+                    this.timeslot[i][j].setFitness(0);
+                }
+            }
+        }
+    }
+    public void clearSubject(String subject)
+    {
+
     }
     public int getFitnessTimetable() {
         return fitnessTimetable;
