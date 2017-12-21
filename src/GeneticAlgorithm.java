@@ -4,18 +4,24 @@ import java.util.ArrayList;
 public class GeneticAlgorithm {
 
     //PARAMETERS : I MAKE IT PUBLIC BECAUSE I WILL BE NEEDING IT EVERYWHERE
-    public final static int POPULATION_SIZE = 4;
+    public final static int POPULATION_SIZE = 6;
+    public final static int GENERATION = 1;
+    //crossover rate = based on segment; 5/50;
+    //mutation rate = based on condition;
 
     //---------------------------------------------------------------------
-     public Population pop[] = new Population[POPULATION_SIZE];
+     //public Population pop[] = new Population[POPULATION_SIZE];
+     public ArrayList<Population> pop;
 
     public GeneticAlgorithm() throws IOException, InterruptedException {
         //INITIALIZE ALL POPULATION
-        manipluateObject();
+
+        pop = new ArrayList<>();
+
         initializePopulation();
         calculateAllFitness();
         printAllFitness();
-
+        sortPopulation();
         Mating();
         Thread.sleep(1000);
         //printAllTimetable(pop);
@@ -27,17 +33,42 @@ public class GeneticAlgorithm {
         for(int i =0; i <POPULATION_SIZE; i++){
 
             InitializeGA init= new InitializeGA();
-            pop[i] = init.getPopulation();
+            pop.add(init.getPopulation());
             System.out.println("\nPOPULATION ID : "+(i+1)+"\n");
-            Thread.sleep(2000);
+            //Thread.sleep(2000);
             //printTimetableGroup(pop[i]);
         }
     }
     private void Mating() throws InterruptedException {
         System.out.println("STARTING CROSSOVER ...");
-        Mating mating = new Mating(pop);
 
-        pop = mating.getPop();
+       for(int i =0; i < GENERATION; i++)
+       {
+           Mating mating = new Mating(pop);
+           //REPLACE LAST POPULATION
+           pop.set(POPULATION_SIZE-1,mating.getHighestPop());
+           sortPopulation();
+           calculateAllFitness();
+           printAllFitness();
+           Thread.sleep(1000);
+       }
+    }
+    private void sortPopulation()
+    {
+        Population temp;
+        //HIGHEST TO LOWEST
+        for(int i =1; i < POPULATION_SIZE; i++)
+        {
+            for(int j =0; j<POPULATION_SIZE-i; j++)
+            {
+                if(((Population)pop.get(j)).getPopulationFitness() < ((Population)pop.get(j+1)).getPopulationFitness())
+                {
+                    temp = (Population)pop.get(j);
+                    pop.set(j, pop.get(j+1));
+                    pop.set(j+1, temp);
+                }
+            }
+        }
 
     }
 
@@ -150,7 +181,7 @@ public class GeneticAlgorithm {
         //population.setPopulationFitness(totalFitness);
     }
 
-    public void calculateFitness(Population population)
+    public int calculateFitness(Population population)
     {
         ArrayList groupList = population.gettGroupList();
 
@@ -220,6 +251,8 @@ public class GeneticAlgorithm {
             timetable.countFitness();
         }
         population.calculateGroupFitness();
+
+        return population.getPopulationFitness();
     }
 
     public void calculateAllFitness()
@@ -232,18 +265,14 @@ public class GeneticAlgorithm {
             System.out.println("\n Iteration : " + i);
             printAllFitness();
 */
+            Population population = ((Population) pop.get(i));
 
-            calculateFitness(pop[i]);
+            population.setPopulationFitness(calculateFitness(population));
+            pop.set(i,population);
         }
 
     }
 
-    public void manipluateObject() throws IOException {
-        for(int i =0; i < POPULATION_SIZE; i++)
-        {
-            pop[i] = new Population();
-        }
-    }
     public static void printAllTimetable(Population[] population)
     {
         for(int i =0; i < POPULATION_SIZE; i++)
@@ -256,7 +285,7 @@ public class GeneticAlgorithm {
     {
         for(int i =0; i < POPULATION_SIZE; i++)
         {
-            System.out.println("Poppulation "+(i+1)+" : " + pop[i].getPopulationFitness());
+            System.out.println("Poppulation "+(i+1)+" : " + ((Population)pop.get(i)).getPopulationFitness());
         }
     }
 

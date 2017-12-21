@@ -148,6 +148,8 @@ public class InitializeGA {
                                 //setSubject
                                 info.setSubjectCode(((Subject) subjectList.get(s)).getCode().trim());
                                 info.setSubjectHour(((Subject) subjectList.get(s)).getTutoHour());
+                                char temp ='T';
+                                info.setSubjectType(temp);
 
                                 //setindex
                                 info.setDay(dayTuto);
@@ -225,6 +227,7 @@ public class InitializeGA {
                                 //setSubject
                                 info.setSubjectCode(((Subject) subjectList.get(s)).getCode().trim());
                                 info.setSubjectHour(((Subject) subjectList.get(s)).getLectHour());
+                                info.setSubjectType('L');
 
                                 //setindex
                                 info.setDay(dayLect);
@@ -301,6 +304,7 @@ public class InitializeGA {
                                 //setSubject
                                 info.setSubjectCode(((Subject) subjectList.get(s)).getCode().trim());
                                 info.setSubjectHour(((Subject) subjectList.get(s)).getLabHour());
+                                info.setSubjectType('M');
 
                                 //setindex
                                 info.setDay(dayLab);
@@ -325,6 +329,8 @@ public class InitializeGA {
                                     info.setKelasCap(((Kelas) kelasList.get(kelasIndexLab)).getKelasCap());
 
                                     ((Timetable) tKelasList.get(kelasIndexLab)).setTimeslot(info, dayLab, timeLab, ((Subject) subjectList.get(s)).getLabHour());
+                                    //System.out.println( ((Timetable) tKelasList.get(kelasIndexLab)).getTimeslot(dayLab,timeLab).getSubjectType() );
+
 
                                 }
                                 else

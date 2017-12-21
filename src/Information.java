@@ -2,6 +2,7 @@ public class Information {
 
     //subject variable
     String subjectCode;
+    char subjectType;
     int subjectHour;
 
     //group variable
@@ -15,7 +16,6 @@ public class Information {
     String kelas;
     int kelasCap;
     char kelasType;
-    String type;
 
     int fitness;
 
@@ -38,8 +38,15 @@ public class Information {
         this.lecturer = "";
         this.kelas = "";
         this.fitness = 0;
-        this.type = "";
 
+    }
+
+    public char getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(char subjectType) {
+        this.subjectType = subjectType;
     }
 
     public int getTime() {
@@ -119,13 +126,6 @@ public class Information {
         this.fitness++;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getSubjectCode() {
         return subjectCode;
@@ -174,6 +174,18 @@ public class Information {
             return true;
         }
 
+        return false;
+    }
+    public boolean checkInfoEquality(Information info)
+    {
+        if(
+                this.subjectCode.equalsIgnoreCase(info.getSubjectCode())&&
+                this.group.equalsIgnoreCase(info.getGroup())      &&
+                (this.subjectType == info.getSubjectType())
+                )
+        {
+            return true; //TRUE SAMA / EQUAL
+        }
         return false;
     }
 
