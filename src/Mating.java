@@ -179,8 +179,10 @@ public class Mating {
 
 
                         String checkError = "[A == NULL | B != NULL | inSegment] \n" + " BEFORE " +  child.getName() +"\n"+ printTimetable(child);
+
                         child.clearTimeslot(dayB,timeB,block);
                         checkError += "\nAFTER " + child.getName() +"\n"+ printTimetable(child);
+
                         System.out.println(checkError);
                         //Thread.sleep(1000);
 
@@ -236,6 +238,7 @@ public class Mating {
                             String checkError = "[A != NULL | B != NULL | inSegment | noOverlap] \n" + " BEFORE " +  child.getName() +"\n"+ printTimetable(child);
 
                             child.clearTimeslot(dayB,timeB,block);
+                            child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType());
                             child.setTimeslot(infoA,day,segment1,blockA);
 
                             checkError += "\nAFTER " + child.getName() +"\n"+ printTimetable(child);
@@ -264,7 +267,7 @@ public class Mating {
                     }
 
                 }
-                else
+                else// B == Null
                 {
                     //TODO: CHECK OVERLAPPING
                     if(checkOverlap(infoA,child,day,segment1))
@@ -317,15 +320,15 @@ public class Mating {
 
     }
 
-    private void relationshipMapping(Timetable parentA, Timetable parentB,Timetable child, Information replacement, int day) throws InterruptedException {
+    private void relationshipMapping(Timetable parentA, Timetable parentB,Timetable child, Information replacement, int day) throws InterruptedException
+    {
+
         int indexSegment;
         String subjectA,subjectB;
         char subTypeA;
         indexSegment = day;//day yang nak kene replace, yang mula2 match
         Information infoReplace = replacement;// simpan untuk replace masa last
         Information timeslotA = parentA.getTimeslot(day,segment1);
-
-
 
         do {
             System.out.println("Relationship mapping \"" + parentB.getName() +"\" \"" + replacement.getSubjectCode()+"\"");
@@ -364,17 +367,41 @@ public class Mating {
                     int targetDay = getIndexDay(parentB,subjectA, subTypeA);
 
 
-                    int block = parentB.getTimeslot(targetDay,targetTime).getSubjectHour();
-                    int dayIndex = parentB.getTimeslot(targetDay,targetTime).getDay();
-                    int timeIndex = parentB.getTimeslot(targetDay,targetTime).getTime();
+                    int block;
+                    int dayIndex;
+                    int timeIndex ;
+
+                    Information infoB = parentB.getTimeslot(day,segment1);
 
                     //TODO 1: timeslot B (dalam segment) letak dalam mapping kat luar segment
                     //TODO 2 : timeslot A (dalam segment) letak dalam segment B;
 
-                    //Clear dulu sebelum replace
-                    child.clearTimeslot(day,segment1,block);
-                    child.setTimeslot(infoReplace,dayIndex,timeIndex,block);//letak yang dalam segment kat luar segment
+                    //TODO: STEP 1 Map location outside segment for B
+                    //Done in the loop above
+                    //TODO: STEP 2 Clear location outside segment
+                    block = parentB.getTimeslot(targetDay,targetTime).getSubjectHour();
+                    dayIndex = parentB.getTimeslot(targetDay,targetTime).getDay();
+                    timeIndex = parentB.getTimeslot(targetDay,targetTime).getTime();
+                    child.clearTimeslot(dayIndex,timeIndex,block);
 
+                    //TODO: STEP 3 Move timeslot B to outside segment
+                    if(checkOverlap(infoB,child,dayIndex,timeIndex))
+                    {
+                        child.clearSubject(infoB.getSubjectCode(),infoB.getSubjectType());
+                        child.setTimeslot(infoB,dayIndex,timeIndex,block);//letak yang dalam segment kat luar segment
+                    }
+                    else
+                    {
+                        child = Mutation(child,infoB);
+                    }
+
+                    //TODO: STEP 4 Clear timeslot B inside Segment
+                    block = parentB.getTimeslot(day,segment1).getSubjectHour();
+                    dayIndex = parentB.getTimeslot(day,segment1).getDay();
+                    timeIndex = parentB.getTimeslot(day,segment1).getTime();
+                    child.clearTimeslot(dayIndex,timeIndex,block);
+
+                    //TODO: STEP 5 Move timslot A inside segment to B
                     //letak A ke dalam B
                     if(checkOverlap(timeslotA,child,day,segment1))
                     {
@@ -383,6 +410,7 @@ public class Mating {
 
                         //setInfoA
                         int blockA = timeslotA.getSubjectHour();
+                        child.clearSubject(timeslotA.getSubjectCode(),timeslotA.getSubjectType());
                         child.setTimeslot(timeslotA,day,segment1,blockA);
 
                         checkError += "\nAFTER " + child.getName() +"\n"+ printTimetable(child);
@@ -527,6 +555,18 @@ public class Mating {
 
         return timetable;
     }
+    private Timetable makeSpace(Timetable timetable)
+    {
+        for(int day = 0; day < 5; day++)
+        {
+            for(int time=0; time <10; time++)
+            {
+
+            }
+        }
+
+        return timetable;
+    }
 
     private String addSpace(int num)
     {
@@ -554,7 +594,7 @@ public class Mating {
                 if(t.getTimeslot(day,time) != null){
 
                     Information info = t.getTimeslot(day, time);
-                    String text = "\""+ info.getSubjectCode() + "\" - \""+ info.getSubjectType()+"\"";
+                    String text = ""+ info.getSubjectCode() + " - "+ info.getSubjectType()+"";
                     timetable+= text + addSpace(spaceNum - text.length());
                     //timetable +=  String.format("%-"+String.valueOf(spaceNum - text.length())+"s", text);
                 }
@@ -616,8 +656,11 @@ public class Mating {
 
         //info = information that wanted to be sloted in timetable,
         //basically, info A to be slotted in timetable B
-
-        if(timetable.checkTimeslot(day,time,info.getSubjectHour()))
+        if((info.getSubjectHour() + time) > 10)
+        {
+         return false;
+        }
+        else if(timetable.checkTimeslot(day,time,info.getSubjectHour()))
         {
             return true;
         }

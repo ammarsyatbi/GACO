@@ -48,10 +48,12 @@ public class InitializeGA {
 
         int notIn;
         int notInKelas;
+        int slottedGroup;
 
         do {
             notIn =0;
             notInKelas =0;
+            slottedGroup =0;
 
             population = new Population();
             tGroupList = population.gettGroupList();
@@ -71,7 +73,7 @@ public class InitializeGA {
                             Random rg = new Random();
                             Information info;
                             int dayTuto = rg.nextInt(5);
-                            int timeTuto = rg.nextInt(10 - ((Subject) subjectList.get(s)).getTutoHour());
+                            int timeTuto = rg.nextInt(11- ((Subject) subjectList.get(s)).getTutoHour());
 
                             int dayLect = rg.nextInt(5);
                             int timeLect = rg.nextInt(11 - ((Subject) subjectList.get(s)).getLectHour());
@@ -89,13 +91,13 @@ public class InitializeGA {
                             do {
 
                                  dayTuto = rg.nextInt(5);
-                                 timeTuto = rg.nextInt(10 - ((Subject) subjectList.get(s)).getTutoHour());
+                                 timeTuto = rg.nextInt(11 - ((Subject) subjectList.get(s)).getTutoHour());
 
                                  dayLect = rg.nextInt(5);
-                                 timeLect = rg.nextInt(10 - ((Subject) subjectList.get(s)).getLectHour());
+                                 timeLect = rg.nextInt(11 - ((Subject) subjectList.get(s)).getLectHour());
 
                                  dayLab = rg.nextInt(5);
-                                 timeLab = rg.nextInt(10 - ((Subject) subjectList.get(s)).getLabHour());
+                                 timeLab = rg.nextInt(11 - ((Subject) subjectList.get(s)).getLabHour());
 
 
                                 kelasIndexTuto = rg.nextInt(tKelasList.size());
@@ -186,6 +188,7 @@ public class InitializeGA {
                                 }
 
                                 ((Timetable) tGroupList.get(t)).setTimeslot(info, dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour());
+                                slottedGroup += ((Subject) subjectList.get(s)).getTutoHour();
                                 //------------------END ASSIGN TUTORIAL---------------------------------------------------------------------
                             } else {
                                 System.out.print("Group/Class not in after 10k Iteration - ");
@@ -261,6 +264,7 @@ public class InitializeGA {
                                 }
 
                                 ((Timetable) tGroupList.get(t)).setTimeslot(info, dayLect, timeLect, ((Subject) subjectList.get(s)).getLectHour());
+                                slottedGroup += ((Subject) subjectList.get(s)).getLectHour();
                                 //------------------END ASSIGN LECTURE---------------------------------------------------------------------
                             } else {
                                 System.out.print("Group/Class not in after 10k Iteration - ");
@@ -342,6 +346,7 @@ public class InitializeGA {
                                 }
 
                                 ((Timetable) tGroupList.get(t)).setTimeslot(info, dayLab, timeLab, ((Subject) subjectList.get(s)).getLabHour());
+                                slottedGroup += ((Subject) subjectList.get(s)).getLabHour();
                                 //------------------END ASSIGN LAB---------------------------------------------------------------------
                             } else {
                                 System.out.print("Group/Class not in after 10k Iteration - ");
@@ -355,7 +360,7 @@ public class InitializeGA {
             }
             //System.out.println(" Groupmatched subject == timetable : " + groupMatched);
             //printTimetableGroup();
-            System.out.println(" Group subject not in : " + notIn  + "  Kelas not slotted : " + notInKelas);
+            System.out.println(" Group subject not in : " + notIn  + "  Kelas not slotted : " + notInKelas + " Total slotted : " + slottedGroup);
             System.out.println("Group size : " + tGroupList.size() + " Kelas size : " + tKelasList.size() + " Lecturer size : " + tLecturerList.size() );
         }while(notIn > 0 || notInKelas > 0);
     }//end assignTT

@@ -52,6 +52,12 @@ public class Timetable {
         }
     return true; //true = empty, can go in la
     }
+    boolean isLeftEmpty(int day, int time)
+    {
+        int masa = time-1;
+
+        return false;
+    }
 
     boolean checkTimeslot(int day,int time)
     {

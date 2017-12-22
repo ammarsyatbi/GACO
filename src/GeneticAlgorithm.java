@@ -5,7 +5,7 @@ public class GeneticAlgorithm {
 
     //PARAMETERS : I MAKE IT PUBLIC BECAUSE I WILL BE NEEDING IT EVERYWHERE
     public final static int POPULATION_SIZE = 6;
-    public final static int GENERATION = 1;
+    public final static int GENERATION = 10;
     //crossover rate = based on segment; 5/50;
     //mutation rate = based on condition;
 
@@ -26,7 +26,7 @@ public class GeneticAlgorithm {
         Thread.sleep(1000);
         //printAllTimetable(pop);
         calculateAllFitness();
-        printAllFitness();
+        //printAllFitness();
     }
 
     private void initializePopulation() throws IOException, InterruptedException {
@@ -46,8 +46,9 @@ public class GeneticAlgorithm {
        {
            Mating mating = new Mating(pop);
            //REPLACE LAST POPULATION
-           pop.set(POPULATION_SIZE-1,mating.getHighestPop());
+           pop.add(mating.getHighestPop());
            sortPopulation();
+           pop.remove(pop.size()-1);
            calculateAllFitness();
            printAllFitness();
            Thread.sleep(1000);
