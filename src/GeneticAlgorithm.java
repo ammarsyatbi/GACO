@@ -5,7 +5,7 @@ public class GeneticAlgorithm {
 
     //PARAMETERS : I MAKE IT PUBLIC BECAUSE I WILL BE NEEDING IT EVERYWHERE
     public final static int POPULATION_SIZE = 6;
-    public final static int GENERATION = 10;
+    public final static int GENERATION = 100;
     //crossover rate = based on segment; 5/50;
     //mutation rate = based on condition;
 
@@ -47,22 +47,25 @@ public class GeneticAlgorithm {
            Mating mating = new Mating(pop);
            //REPLACE LAST POPULATION
            pop.add(mating.getHighestPop());
+           calculateAllFitness();
            sortPopulation();
            pop.remove(pop.size()-1);
-           calculateAllFitness();
            printAllFitness();
+           calculateAllSlotted();
+
            Thread.sleep(1000);
        }
     }
     private void sortPopulation()
     {
+        //FITTEST ON TOP
         Population temp;
         //HIGHEST TO LOWEST
         for(int i =1; i < POPULATION_SIZE; i++)
         {
             for(int j =0; j<POPULATION_SIZE-i; j++)
             {
-                if(((Population)pop.get(j)).getPopulationFitness() < ((Population)pop.get(j+1)).getPopulationFitness())
+                if(((Population)pop.get(j)).getPopulationFitness() > ((Population)pop.get(j+1)).getPopulationFitness())
                 {
                     temp = (Population)pop.get(j);
                     pop.set(j, pop.get(j+1));
@@ -287,6 +290,20 @@ public class GeneticAlgorithm {
         for(int i =0; i < POPULATION_SIZE; i++)
         {
             System.out.println("Poppulation "+(i+1)+" : " + ((Population)pop.get(i)).getPopulationFitness());
+        }
+    }
+
+    public void calculateAllSlotted()
+    {
+
+        for(int i=0; i < POPULATION_SIZE; i++)
+        {
+
+            System.out.println("POPULATION : " + (i+1));
+          Population population = pop.get(i);
+
+          population.countAllSlotted();
+          pop.set(i,population);
         }
     }
 

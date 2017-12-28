@@ -36,6 +36,7 @@ public class InitializeGA {
 
         //assignTimetable();
         assignTT();
+        population.countAllSlotted();
         //initializeFitness();//set all fitness to zero before calculate
         ///printGroupList();
     }

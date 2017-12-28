@@ -56,7 +56,35 @@ public class Timetable {
     {
         int masa = time-1;
 
+        //Information temp = this.getTimeslot(day,time);
+        if(masa >=0)
+        {
+            if ((this.timeslot[day][masa] == null)) {
+                return true;
+            }
+        }
+
         return false;
+    }
+    void moveLeft(int day, int time)
+    {
+        Information temp = this.getTimeslot(day,time);
+        int masa = time-1;
+
+        if(temp != null)
+        {
+            if(isLeftEmpty(day,time))
+            {
+                clearTimeslot(day,time,temp.getSubjectHour());
+                setTimeslot(temp,day,masa,temp.getSubjectHour());
+            }
+            else
+            {
+                System.out.println(name + " Left is not EMPTY " + temp.getSubjectCode());
+            }
+        }
+
+
     }
 
     boolean checkTimeslot(int day,int time)
@@ -299,6 +327,37 @@ public class Timetable {
     public void addTimeslotFitness(int day, int time)
     {
         this.timeslot[day][time].addFitness();
+    }
+
+    public boolean equalInfo(Information info, int day,int time)
+    {
+        if(this.timeslot[day][time] != null)
+        {
+            if(info.getSubjectCode().equalsIgnoreCase(this.timeslot[day][time].getSubjectCode()) &&
+                    info.getSubjectType()== this.timeslot[day][time].getSubjectType())
+            {
+                return  true;
+            }
+        }
+        return false;
+    }
+
+    public int countTimeslot()
+    {
+
+        int count = 0;
+        for(int i =0; i < 5; i++)
+        {
+            for(int j=0; j <10; j++)
+            {
+                if(this.timeslot[i][j] != null)
+                {
+                 count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 

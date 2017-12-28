@@ -22,6 +22,10 @@ public class Population {
     private  int populationSize;
     private int populationFitness;
 
+    private int slottedGroup;
+    private int slottedKlas;
+    private int slottedLect;
+
     Population() throws IOException
     {
 
@@ -376,6 +380,85 @@ public class Population {
         }
 
         this.populationFitness = totalFitness;
+    }
+
+    public void countSlottedGroup()
+    {
+        int count = 0;
+        for(int i =0; i < tGroupList.size(); i++)
+        {
+            Timetable timetable = (Timetable)tGroupList.get(i);
+
+            for(int j=0; j <5; j++)
+            {
+                for(int k =0; k <10; k ++)
+                {
+                    if(timetable.getTimeslot(j,k) != null)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        slottedGroup = count;
+        // gg end
+    }
+    public void counteSlottedKelas()
+    {
+
+        int count = 0;
+        for(int i =0; i < tKelasList.size(); i++)
+        {
+            Timetable timetable = (Timetable)tKelasList.get(i);
+
+            for(int j=0; j <5; j++)
+            {
+                for(int k =0; k <10; k ++)
+                {
+                    if(timetable.getTimeslot(j,k) != null)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        slottedKlas = count;
+
+
+    }
+    public void countSlottedLect()
+    {
+        int count = 0;
+        for(int i =0; i < tLecturerList.size(); i++)
+        {
+            Timetable timetable = (Timetable)tLecturerList.get(i);
+
+            for(int j=0; j <5; j++)
+            {
+                for(int k =0; k <10; k ++)
+                {
+                    if(timetable.getTimeslot(j,k) != null)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        slottedLect = count;
+
+    }
+
+    public void countAllSlotted()
+    {
+        countSlottedGroup();
+        counteSlottedKelas();
+        countSlottedLect();
+        System.out.println("Slotted:- \n Group : " + slottedGroup
+                            + " \n Kelas : " + slottedKlas
+                            + " \n Lecturer : " + slottedLect);
     }
 
 
