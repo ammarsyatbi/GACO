@@ -3,6 +3,7 @@ import java.util.Arrays;
 public class Timetable {
 
     private String name;
+    Object object;
     private Information[][] timeslot = new Information[5][10];
     private int fitnessTimetable;
 
@@ -35,7 +36,16 @@ public class Timetable {
 //        return timeslot;
 //    }
 
-    public Information getTimeslot(int day,int time)
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
+    public Information getTimeslot(int day, int time)
     {
         return this.timeslot[day][time];
     }
@@ -52,12 +62,14 @@ public class Timetable {
         }
     return true; //true = empty, can go in la
     }
+
+    //makespace gang
     boolean isLeftEmpty(int day, int time)
     {
         int masa = time-1;
 
         //Information temp = this.getTimeslot(day,time);
-        if(masa >=0)
+        if(masa >=0 )//&& masa != 4 && masa !=5 : cannot do this, space is more important right now
         {
             if ((this.timeslot[day][masa] == null)) {
                 return true;
@@ -85,6 +97,39 @@ public class Timetable {
         }
 
 
+    }
+
+    boolean isRightEmpty(int day, int time)
+    {
+        int masa = time+1;
+
+        //Information temp = this.getTimeslot(day,time);
+        if(masa <10 && masa != 4 && masa !=5)
+        {
+            if ((this.timeslot[day][masa] == null)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    void moveRight(int day, int time)
+    {
+        Information temp = this.getTimeslot(day,time);
+        int masa = time+1;
+
+        if(temp != null)
+        {
+            if(isRightEmpty(day,time))
+            {
+                clearTimeslot(day,time,temp.getSubjectHour());
+                setTimeslot(temp,day,masa,temp.getSubjectHour());
+            }
+            else
+            {
+                System.out.println(name + " Right is not EMPTY " + temp.getSubjectCode());
+            }
+        }
     }
 
     boolean checkTimeslot(int day,int time)
@@ -231,7 +276,8 @@ public class Timetable {
             }
         }
     }
-    public void clearSubject(String subject, char subType)
+
+    public void clearSubject(String subject, char subType,String groupName)
     {
         for(int i=0; i<5; i++)
         {
@@ -239,19 +285,19 @@ public class Timetable {
             {
                 if(timeslot[i][j] != null) {
                     if (
-                            timeslot[i][j].getSubjectCode().equalsIgnoreCase(subject) &&
-                                    (timeslot[i][j].getSubjectType() == subType)
+                           timeslot[i][j].getSubjectCode().equalsIgnoreCase(subject) &&
+                           (timeslot[i][j].getSubjectType() == subType) &&
+                           timeslot[i][j].getGroup().equalsIgnoreCase(groupName)
                             )
                     {
-
                         timeslot[i][j] = null;
-
                     }
                 }
             }
         }
-
     }
+
+
     public void calculateTimetableFitness()
     {
 

@@ -159,7 +159,9 @@ public class Population {
 
             Timetable tTemp = new Timetable();
             tTemp.setName(kelas);
+            tTemp.setObject(temp);
             tKelasList.add(tTemp);
+
         }
     }
 

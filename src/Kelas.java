@@ -3,12 +3,21 @@ public class Kelas {
     String kelas;
     int kelasCap;
     char kelasType;
+    int kelasIndex;
 
 
     public Kelas(String kelas, int kelasCap, char kelasType) {
         this.kelas = kelas;
         this.kelasCap = kelasCap;
         this.kelasType = kelasType;
+    }
+
+    public int getKelasIndex() {
+        return kelasIndex;
+    }
+
+    public void setKelasIndex(int kelasIndex) {
+        this.kelasIndex = kelasIndex;
     }
 
     public String getKelas() {

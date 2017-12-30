@@ -176,6 +176,25 @@ public class Information {
 
         return false;
     }
+
+    public void changeKelasInfo(Information info)
+    {
+        this.kelas = info.getKelas();
+        this.kelasCap = info.getKelasCap();
+        this.kelasIndex = info.getKelasIndex();
+        this.kelasType = info.getKelasType();
+    }
+    public void changeKelasInfo(Object object)
+    {
+        Kelas temp = (Kelas) object;
+
+
+        this.kelas = temp.getKelas();
+        this.kelasCap = temp.getKelasCap();
+        //this.kelasIndex = temp.getKelasIndex();
+        this.kelasType = temp.getKelasType();
+    }
+
     public boolean checkInfoEquality(Information info)
     {
         if(

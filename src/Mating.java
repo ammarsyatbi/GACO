@@ -24,7 +24,7 @@ public class Mating {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-    private ArrayList pop = new ArrayList<Population>();
+    private ArrayList<Population> pop = new ArrayList<Population>();
 
 
     private final static int segment1 = 4;
@@ -102,8 +102,10 @@ public class Mating {
             //SO NANT PASS TIMETABLE JE #THECHOSENONE
             A = ((Timetable) arrayA.get(i));
             B = ((Timetable) arrayB.get(i));
+            ArrayList kelasA =  populationA.gettKelasList();
+            ArrayList kelasB =  populationB.gettKelasList();
 
-            B = PMX(A,B);
+            B = PMX(A,B,kelasA,kelasB,parentB);
             arrayB.set(i,B);
             populationB.settGroupList(arrayB);
             pop.set(parentB,populationB);
@@ -149,7 +151,7 @@ public class Mating {
         return lowestPop;
     }
 
-    public Timetable PMX(Timetable parentA, Timetable parentB) throws InterruptedException {
+    public Timetable PMX(Timetable parentA, Timetable parentB,ArrayList kelasA,ArrayList kelasB,int populationKey) throws InterruptedException {
 
         Timetable child = new Timetable(parentB);
 
@@ -182,7 +184,9 @@ public class Mating {
 
                             //dia bukan satu set, so ko kene amik dari awal; maybe buat satu function dalam timetable, deteck subject code, clear based ON KEY INDEX,;
                             child.clearTimeslot(dayC,timeC,block);
-                            child = Mutation(child, infoC);
+                            clearKelas(infoC,kelasB,populationKey);
+
+                            child = Mutation(child,kelasB, infoC,populationKey);
 
                             //letak je dekat lain (RESERVE) , nnt bila A nak masuk segment, dia akan clearkan jugak : TODO(check kalau stuck tak cukup slot)
                         }
@@ -208,7 +212,9 @@ public class Mating {
                             String checkError = "[A == NULL | B != NULL | outSegment] \n" + " BEFORE " + child.getName() + "\n" + printTimetable(child);
 
                             child.clearTimeslot(dayC, timeC, block);
-                            child = Mutation(child, infoC);
+                            clearKelas(infoC,kelasB,populationKey);
+
+                            child = Mutation(child,kelasB, infoC,populationKey);
 
                             checkError += "\nAFTER " + child.getName() + "\n" + printTimetable(child);
                             System.out.println(checkError);
@@ -244,15 +250,20 @@ public class Mating {
                                 int dayC = child.getTimeslot(day, segment1).getDay();
                                 int timeC = child.getTimeslot(day, segment1).getTime();
                                 int block = child.getTimeslot(day, segment1).getSubjectHour();
+
+                                clearKelas(infoC,kelasB,populationKey);
                                 child.clearTimeslot(dayC, timeC, block);
 
                                 //check overlapping : BASED ON A SUBJECT THAT WANTED TO BE REPLACE
-                                if (checkOverlap(infoA, child, day, segment1))
+                                if (checkOverlap(infoA, child,kelasB, day, segment1))
                                 {
                                     String checkError = "[A != NULL | B != NULL | inSegment | noOverlap] \n" + " BEFORE " + child.getName() + "\n" + printTimetable(child);
 
-                                    child.clearSubject(infoA.getSubjectCode(), infoA.getSubjectType());
+                                    child.clearSubject(infoA.getSubjectCode(), infoA.getSubjectType(),infoA.getGroup());
+                                    clearKelas(infoA,kelasB,populationKey);
+
                                     child.setTimeslot(infoA, day, segment1, blockA);
+                                    setKelas(infoA,day,segment1,kelasB,populationKey);
 
                                     checkError += "\nAFTER " + child.getName() + "\n" + printTimetable(child);
                                     System.out.println(checkError);
@@ -264,20 +275,20 @@ public class Mating {
                                     //Mutation
                                     String checkError = "[A != NULL | B != NULL | inSegment | Overlap] \n" + " BEFORE " + child.getName() + "\n" + printTimetable(child);
 
-                                    child = Mutation(child, infoA);
+                                    child = Mutation(child,kelasB, infoA,populationKey);
 
                                     checkError += "\nAFTER " + child.getName() + "\n" + printTimetable(child);
                                     System.out.println(checkError);
                                     //Thread.sleep(1000);
                                 }
 
-                                child = Mutation(child,infoC);
+                                child = Mutation(child,kelasB,infoC,populationKey);
                             }
                             else
                             {
                                 //TODO:KALAU C TAK SAMA B CAM MANE , sepatutnya clear slot , bagi A masuk C yang mutation. tapi malas
 
-                                child = Mutation(child, infoA);
+                                child = Mutation(child,kelasB, infoA,populationKey);
                             }
                         }
                         else
@@ -285,12 +296,15 @@ public class Mating {
 
                             //KALAU KOSONG CAM MANE
 
-                            if (checkOverlap(infoA, child, day, segment1))
+                            if (checkOverlap(infoA, child,kelasB, day, segment1))
                             {
                                 String checkError = "[A != NULL | B != NULL | inSegment | noOverlap] \n" + " BEFORE " + child.getName() + "\n" + printTimetable(child);
 
-                                child.clearSubject(infoA.getSubjectCode(), infoA.getSubjectType());
+                                child.clearSubject(infoA.getSubjectCode(), infoA.getSubjectType(),infoA.getGroup());
+                                clearKelas(infoA,kelasB,populationKey);
+
                                 child.setTimeslot(infoA, day, segment1, blockA);
+                                setKelas(infoA,day,segment1,kelasB,populationKey);
 
                                 checkError += "\nAFTER " + child.getName() + "\n" + printTimetable(child);
                                 System.out.println(checkError);
@@ -301,7 +315,7 @@ public class Mating {
                             {
                                 //Mutation
                                 String checkError = "[A != NULL | B != NULL | inSegment | Overlap] \n" + " BEFORE " + child.getName() + "\n" + printTimetable(child);
-                                child = Mutation(child, infoA);
+                                child = Mutation(child,kelasB, infoA,populationKey);
 
                                 checkError += "\nAFTER " + child.getName() + "\n" + printTimetable(child);
                                 System.out.println(checkError);
@@ -311,20 +325,23 @@ public class Mating {
                     }
                     else
                     {
-                        //TODO: R.MAPPING || NI HAAA REPLACE TANPE MAPE !
-                        relationshipMapping(parentA,parentB,child,infoB,day);
+                        // R.MAPPING || NI HAAA REPLACE TANPE MAP !
+                        relationshipMapping(parentA,parentB,child,kelasB,infoB,day,populationKey);
                     }
 
                 }
                 else// B == Null
                 {
                     //CHECK OVERLAPPING
-                    if(checkOverlap(infoA,child,day,segment1))
+                    if(checkOverlap(infoA,child, kelasB, day,segment1))
                     {
                         String checkError = "[A != NULL | B == NULL | inSegment | noOverlap] \n" + " BEFORE " +  child.getName() +"\n"+ printTimetable(child);
 
-                        child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType());
+                        child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType() ,infoA.getGroup());
+                        clearKelas(infoA,kelasB,populationKey);
+
                         child.setTimeslot(infoA,day,segment1,blockA);
+                        setKelas(infoA,day,segment1,kelasB,populationKey);
 
                         checkError += "\nAFTER " + child.getName() +"\n"+ printTimetable(child);
                         System.out.println(checkError);
@@ -339,8 +356,10 @@ public class Mating {
 
                         String checkError = "[A != NULL | B == NULL | inSegment | Overlap] \n" + " BEFORE " +  child.getName() +"\n"+ printTimetable(child);
 
-                        child.clearSubject(subjectA,subTypeA);
-                        child =  Mutation(child,infoA);
+                        child.clearSubject(subjectA,subTypeA,infoA.getGroup());
+                        clearKelas(infoA,kelasB,populationKey);
+
+                        child =  Mutation(child,kelasB,infoA,populationKey);
 
                         checkError += "\nAFTER " + child.getName() +"\n"+ printTimetable(child);
                         System.out.printf(checkError);
@@ -387,9 +406,8 @@ public class Mating {
         {}
     }
 
-    private void relationshipMapping(Timetable parentA, Timetable parentB,Timetable child, Information replacement, int day) throws InterruptedException
+    private void relationshipMapping(Timetable parentA, Timetable parentB,Timetable child, ArrayList kelasB, Information replacement, int day,int populationKey) throws InterruptedException
     {
-
         int indexSegment;
         String subjectA,subjectB;
         char subTypeA;
@@ -450,9 +468,9 @@ public class Mating {
                     //timeslot B (dalam segment) letak dalam mapping kat luar segment
                     //timeslot A (dalam segment) letak dalam segment B;
 
-                    //TODO: STEP 1 Map location outside segment for B
+                    // STEP 1 Map location outside segment for B
                     //Done in the loop above
-                    //TODO: STEP 2 Clear location outside segment B
+                    // STEP 2 Clear location outside segment B
                     block = parentB.getTimeslot(targetDay,targetTime).getSubjectHour();
                     dayIndex = parentB.getTimeslot(targetDay,targetTime).getDay();
                     timeIndex = parentB.getTimeslot(targetDay,targetTime).getTime();
@@ -461,14 +479,17 @@ public class Mating {
 
                     if(child.getTimeslot(targetDay,targetTime) == null)
                     {
-                        if(checkOverlap(infoA,child,targetDay,targetTime) )
+                        if(checkOverlap(infoA,child,kelasB,targetDay,targetTime) )
                         {
-                            child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType());
+                            child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType(),infoA.getGroup());
+                            clearKelas(infoA,kelasB,populationKey);
+
                             child.setTimeslot(infoA,targetDay,targetTime,infoA.getSubjectHour());
+                            setKelas(infoA,targetDay,targetTime,kelasB,populationKey);
                         }
                         else
                         {
-                            child = Mutation(child,infoA);
+                            child = Mutation(child,kelasB,infoA,populationKey);
                         }
                     }
                     else//c !=null
@@ -478,15 +499,19 @@ public class Mating {
                             int timeC = getIndexTime(child,child.getTimeslot(targetDay,targetTime).getSubjectCode(),child.getTimeslot(targetDay,targetTime).getSubjectType());
                             int dayC = getIndexDay(child,child.getTimeslot(targetDay,targetTime).getSubjectCode(),child.getTimeslot(targetDay,targetTime).getSubjectType());
 
-                            child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType());
-                            child.clearSubject(infoB.getSubjectCode(),infoB.getSubjectType());
+                            child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType(),infoA.getGroup());
+                            clearKelas(infoA,kelasB,populationKey);
+
+                            child.clearSubject(infoB.getSubjectCode(),infoB.getSubjectType(),infoB.getGroup());
+                            clearKelas(infoB,kelasB,populationKey);
 
 
                             child.setTimeslot(infoA,timeC,dayC,infoA.getSubjectHour());
+                            setKelas(infoA,timeC,dayC,kelasB,populationKey);
                         }
                         else
                         {
-                            child = Mutation(child,infoA);
+                            child = Mutation(child,kelasB, infoA,populationKey);
                         }
                     }
 
@@ -495,7 +520,7 @@ public class Mating {
 
 //                    child.clearTimeslot(dayIndex,timeIndex,block);
 //
-//                    //TODO: STEP 3 Move timeslot B to outside segment
+//                    // STEP 3 Move timeslot B to outside segment
 //                    if(checkOverlap(infoB,child,dayIndex,timeIndex))
 //                    {
 //                        child.clearSubject(infoB.getSubjectCode(),infoB.getSubjectType());
@@ -506,13 +531,13 @@ public class Mating {
 //                        child = Mutation(child,infoB);
 //                    }
 //
-//                    //TODO: STEP 4 Clear timeslot B inside Segment
+//                    // STEP 4 Clear timeslot B inside Segment
 //                    block = parentB.getTimeslot(day,segment1).getSubjectHour();
 //                    dayIndex = parentB.getTimeslot(day,segment1).getDay();
 //                    timeIndex = parentB.getTimeslot(day,segment1).getTime();
 //                    child.clearTimeslot(dayIndex,timeIndex,block);
 //
-//                    //TODO: STEP 5 Move timslot A inside segment to B
+//                    // STEP 5 Move timslot A inside segment to B
 //                    //letak A ke dalam B
 //                    if(checkOverlap(timeslotA,child,day,segment1))
 //                    {
@@ -529,7 +554,7 @@ public class Mating {
 //                    }
 //                    else
 //                    {
-//                        //TODO:Mutation
+//                        //Mutation
 //                        String checkError = "[A != NULL | RelationshipMapping ] \n" + " BEFORE " +  child.getName() +"\n"+ printTimetable(child);
 //
 //                        child.clearSubject(timeslotA.getSubjectCode(),timeslotA.getSubjectType());
@@ -561,32 +586,38 @@ public class Mating {
                     System.out.println(printTimetable(child));
 
 
-                    int block = child.getTimeslot(day, segment1).getSubjectHour();
-                    int dayIndex = child.getTimeslot(day, segment1).getDay();
-                    int timeIndex = child.getTimeslot(day, segment1).getTime();
+                    int block = infoC.getSubjectHour();
+                    int dayIndex = infoC.getDay();
+                    int timeIndex = infoC.getTime();
 
                     System.out.println("Clear timeslot : " + child.getName() + " - " + child.getTimeslot(dayIndex, timeIndex).getSubjectCode());
 
                     //Thread.sleep(3000);
                     child.clearTimeslot(dayIndex, timeIndex, block);
+                    clearKelas(infoC,kelasB,populationKey);
 
-                    if (checkOverlap(infoA, child, day, segment1))//check overlap lu
+                    if (checkOverlap(infoA, child, kelasB,day, segment1))//check overlap lu
                     {
-                        child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType());
+                        child.clearSubject(infoA.getSubjectCode(),infoA.getSubjectType(),infoA.getGroup());
+                        clearKelas(infoA,kelasB,populationKey);
+
                         child.setTimeslot(infoA, day, segment1, infoA.getSubjectHour());
+                        setKelas(infoA,day,segment1,kelasB,populationKey);
+
+
                     } else {
-                        child = Mutation(child, infoA);
+                        child = Mutation(child,kelasB, infoA,populationKey);
                     }
 
                     //IF  paretnB in segment, IF child isEmpty
                     if(!checkSegment(parentA,infoC.getSubjectCode(),infoC.getSubjectType())) {
-                        child = Mutation(child,infoC);//Replacement or letak balik dah clear
+                        child = Mutation(child,kelasB,infoC,populationKey);//Replacement or letak balik dah clear
                     }
                     else
                     {
                         if(getIndex(parentA,infoC.getSubjectCode(),infoC.getSubjectType()) < day)// maknanye yang selepas je , akan di replace, kalau sebelum dia kene mutate sbb nak pastikan ade dalam timeslot
                         {
-                            child = Mutation(child,infoC);
+                            child = Mutation(child,kelasB,infoC,populationKey);
                         }
                     }
 
@@ -665,31 +696,86 @@ public class Mating {
         return -1;
     }
 
-    private Timetable Mutation(Timetable timetable, Information info)
+    private Timetable Mutation(Timetable timetable, ArrayList kelasList, Information info,int populationKey)
     {
         //INSERTION
-        timetable.clearSubject(info.getSubjectCode(),info.getSubjectType());
+        timetable.clearSubject(info.getSubjectCode(),info.getSubjectType(),info.getGroup());
+
+        Timetable kelasSet = findKelas(info,kelasList);// ni untuk kelas yang nak set tu
+        clearKelas(info,kelasList,populationKey);
 
         Random rg = new Random();
         int block = info.getSubjectHour();
         int day = rg.nextInt(5);
         int time = 0;//rg.nextInt(11);
+        boolean kelasPass = false;
 
 
-        while(!timetable.checkTimeslot(day,time,block))
+        while(!timetable.checkTimeslot(day,time,block) ||
+               !kelasSet.checkTimeslot(day,time,block)
+                )
         {
-            System.out.println("\n Mutation... \n"+timetable.getName()+"\n"+printTimetable(timetable) + "\n");
+            kelasPass = false;
+            System.out.println("\n Mutation... \n Child "+timetable.getName()+"\n"+printTimetable(timetable) + "\n");
+            System.out.println("Kelas Child : " + kelasSet.getName() + " "+ printTimetable(kelasSet));
             System.out.println("Find random day/time that fit for mutation " + day + " " + time + " " + info.getSubjectCode() + " hour : " +info.getSubjectHour() + " " + info.getSubjectType());
 
             printTimetable(timetable);
             day = new Random().nextInt(5);
             time = new Random().nextInt(11 - block);
-            timetable.moveLeft(day,time);
-        }
+
+            //Making spaces : have to check for kelas as well
+            if(timetable.getTimeslot(day,time) != null)
+            {
+                Timetable kelas = findKelas(timetable.getTimeslot(day,time),kelasList);// ni kelas yang nak gerak ke kiri je, based on info gak.
+                //ke kiri
+
+                if(timetable.isLeftEmpty(day,time))
+                {
+                    if(kelas.isLeftEmpty(day,time))
+                    {
+                        timetable.moveLeft(day,time);
+                        kelas.moveLeft(day,time);//kat sini kene set balik kelas
+
+                        //clearKelas(timetable.getTimeslot(day,time),kelasList,populationKey);
+                        setKelas(kelas,kelasList,populationKey);
+                    }
+                }
+                //timetable.moveLeft(day,time);
+            }
+            //end makeSpace
+
+            //basically bila dah dapat empty space kat group, dia cari empty space kat kelas pulak.
+            if(timetable.checkTimeslot(day,time,block))
+            {
+                System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RED);
+                //Thread.sleep(1000);
+                if (!kelasSet.checkTimeslot(day, time, block))
+                {
+                    System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RED);
+                    Timetable emptyKelas = findEmptyKelas(day, time, block, kelasList);
+                    if(emptyKelas.getName() != null)
+                    {
+                        System.out.println(ANSI_RED +"Empty kelas found !" + ANSI_RED);
+                        kelasSet = emptyKelas;
+                        info.changeKelasInfo(emptyKelas.getObject());
+                    }
+                    //info.changeKelasInfo(emptyKelas.getObject());
+                }
+            }
+
+
+        }//endWhile
 
         if(timetable.checkTimeslot(day,time,block))
-        {   System.out.println(info.getSubjectHour() + " is setted on " + day + " " + time);
+        {
+
+
+            System.out.println(info.getSubjectHour() + " is setted on " + day + " " + time);
             timetable.setTimeslot(info,day,time,block);
+
+            clearKelas(info,kelasList,populationKey);
+            setKelas(info,day,time,kelasList,populationKey);
         }
 
 
@@ -809,9 +895,9 @@ public class Mating {
     }
 
     //FALSE = OVERLAP; TRUE THAT IT IS NOT OVERLAP
-    private boolean checkOverlap(Information info,Timetable timetable, int day , int time)
+    private boolean checkOverlap(Information info,Timetable timetable,ArrayList kelasList, int day , int time)
     {
-
+        Timetable kelas = findKelas(info,kelasList);
         //info = information that wanted to be sloted in timetable,
         //basically, info A to be slotted in timetable B
         if((info.getSubjectHour() + time) > 10)
@@ -820,11 +906,107 @@ public class Mating {
         }
         else if(timetable.checkTimeslot(day,time,info.getSubjectHour()))
         {
-            return true;
+            if(kelas.checkTimeslot(day,time,info.getSubjectHour()))
+            {
+                return true;
+            }
         }
 
         //TODO: checkTimeslot (True that it is empty)
         return false;
+    }
+
+    public void clearKelas(Information infoC,ArrayList kelasList, int populationKey)
+    {
+
+//        Timetable kelas = findKelas(infoC,kelasList);
+//        kelas.clearSubject(infoC.getSubjectCode(),infoC.getSubjectType(),infoC.getGroup());
+//        //masukkan balik
+//        setKelas(kelas,kelasList,populationKey);
+
+
+        // KENE GO THROUGH SEMUA ! BUKAN BY TABLE, SEBAB TABLE TU YANG KELAS A NYE, BUKAN YANG B NYE
+        Timetable kelas; // = new Timetable();
+
+        for(int i =0; i < kelasList.size(); i++)
+        {
+            kelas = (Timetable) kelasList.get(i);
+            kelas.clearSubject(infoC.getSubjectCode(),infoC.getSubjectType(),infoC.getGroup());
+
+                kelasList.set(i,kelas);// ganti kelas dalam arraylist
+                Population temp = pop.get(populationKey);
+                temp.settKelasList(kelasList);//ganti arraylist dalam population
+                pop.set(populationKey,temp);
+        }
+
+    }
+
+    private Timetable findKelas(Information info, ArrayList kelasList)
+    {
+        Timetable kelas = new Timetable();
+
+        for(int i =0; i < kelasList.size(); i++)
+        {
+            kelas = (Timetable) kelasList.get(i);
+
+            if(info.getKelas().equalsIgnoreCase(kelas.getName()))
+            {
+                return kelas;
+            }
+        }
+
+        return kelas;
+    }
+
+    private Timetable findEmptyKelas(int day,int time,int block,ArrayList kelasList)
+    {
+        for(int i=0; i < kelasList.size(); i++)
+        {
+            Timetable temp = (Timetable)kelasList.get(i);
+            if(temp.checkTimeslot(day,time,block))
+            {
+                return temp;
+            }
+        }
+        Timetable timetable = new Timetable();
+        return  timetable;
+    }
+
+    private void setKelas(Timetable kelasBaru, ArrayList kelasList,int populationKey)
+    {
+        Timetable kelasLama; // = new Timetable();
+
+        for(int i =0; i < kelasList.size(); i++)
+        {
+            kelasLama = (Timetable) kelasList.get(i);
+
+            if(kelasBaru.getName().equalsIgnoreCase(kelasLama.getName()))
+            {
+                kelasList.set(i,kelasBaru);// ganti kelas dalam arraylist
+                Population temp = pop.get(populationKey);
+                temp.settKelasList(kelasList);//ganti arraylist dalam population
+                pop.set(populationKey,temp);
+            }
+        }
+    }
+    private void setKelas(Information info,int day,int time, ArrayList kelasList,int populationKey)
+    {
+        Timetable kelasBaru = findKelas(info,kelasList);
+        kelasBaru.clearSubject(info.getSubjectCode(),info.getSubjectType(),info.getGroup());
+        kelasBaru.setTimeslot(info,day,time,info.getSubjectHour());
+
+        Timetable kelasLama;
+        for(int i =0; i < kelasList.size(); i++)
+        {
+            kelasLama = (Timetable) kelasList.get(i);
+            if(kelasBaru.getName().equalsIgnoreCase(kelasLama.getName()))
+            {
+                kelasList.set(i,kelasBaru);
+                Population temp = pop.get(populationKey);
+                temp.settKelasList(kelasList);
+                pop.set(populationKey,temp);
+            }
+        }
     }
 
 

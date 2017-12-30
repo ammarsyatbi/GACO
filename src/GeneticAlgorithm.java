@@ -5,7 +5,7 @@ public class GeneticAlgorithm {
 
     //PARAMETERS : I MAKE IT PUBLIC BECAUSE I WILL BE NEEDING IT EVERYWHERE
     public final static int POPULATION_SIZE = 6;
-    public final static int GENERATION = 100;
+    public final static int GENERATION = 10;
     //crossover rate = based on segment; 5/50;
     //mutation rate = based on condition;
 
