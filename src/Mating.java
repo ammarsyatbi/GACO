@@ -444,7 +444,8 @@ public class Mating {
                     }
 
                 }
-                else {
+                else
+                    {
 
                     System.out.println("Parent A"+printTimetable(parentA));
                     System.out.println("Not in segment - " +"\""+ subjectA +"\""+ " \"" + subTypeA+"\"");
@@ -486,6 +487,7 @@ public class Mating {
 
                             child.setTimeslot(infoA,targetDay,targetTime,infoA.getSubjectHour());
                             setKelas(infoA,targetDay,targetTime,kelasB,populationKey);
+
                         }
                         else
                         {
@@ -508,6 +510,10 @@ public class Mating {
 
                             child.setTimeslot(infoA,timeC,dayC,infoA.getSubjectHour());
                             setKelas(infoA,timeC,dayC,kelasB,populationKey);
+
+                            System.out.println(ANSI_BLUE + "Relationship mapping..." + ANSI_RESET);
+                            System.out.println("Child after : "+printTimetable(child));
+                            //pressAnyKeyToContinue();
                         }
                         else
                         {
@@ -516,6 +522,7 @@ public class Mating {
                     }
 
                     System.out.println("Child after : "+printTimetable(child));
+                    //pressAnyKeyToContinue();
 //----------------------------------------------------------------------------------------------------------------------
 
 //                    child.clearTimeslot(dayIndex,timeIndex,block);
@@ -740,6 +747,18 @@ public class Mating {
                         //clearKelas(timetable.getTimeslot(day,time),kelasList,populationKey);
                         setKelas(kelas,kelasList,populationKey);
                     }
+
+                }
+                else if(timetable.isRightEmpty(day,time))
+                {
+                    if(kelas.isRightEmpty(day,time))
+                    {
+                        timetable.moveRight(day,time);
+                        kelas.moveRight(day,time);//kat sini kene set balik kelas
+
+                        //clearKelas(timetable.getTimeslot(day,time),kelasList,populationKey);
+                        setKelas(kelas,kelasList,populationKey);
+                    }
                 }
                 //timetable.moveLeft(day,time);
             }
@@ -748,15 +767,15 @@ public class Mating {
             //basically bila dah dapat empty space kat group, dia cari empty space kat kelas pulak.
             if(timetable.checkTimeslot(day,time,block))
             {
-                System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RED);
+                System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RESET);
                 //Thread.sleep(1000);
                 if (!kelasSet.checkTimeslot(day, time, block))
                 {
-                    System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RED);
+                    System.out.println(ANSI_RED +"Group Found ! find empty Kelas..."+ ANSI_RESET);
                     Timetable emptyKelas = findEmptyKelas(day, time, block, kelasList);
                     if(emptyKelas.getName() != null)
                     {
-                        System.out.println(ANSI_RED +"Empty kelas found !" + ANSI_RED);
+                        System.out.println(ANSI_RED +"Empty kelas found !" + ANSI_RESET);
                         kelasSet = emptyKelas;
                         info.changeKelasInfo(emptyKelas.getObject());
                     }
@@ -938,7 +957,6 @@ public class Mating {
                 temp.settKelasList(kelasList);//ganti arraylist dalam population
                 pop.set(populationKey,temp);
         }
-
     }
 
     private Timetable findKelas(Information info, ArrayList kelasList)

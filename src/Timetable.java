@@ -69,7 +69,7 @@ public class Timetable {
         int masa = time-1;
 
         //Information temp = this.getTimeslot(day,time);
-        if(masa >=0 )//&& masa != 4 && masa !=5 : cannot do this, space is more important right now
+        if(masa >=0 && masa <=5)//&& masa != 4 && masa !=5 : cannot do this, space is more important right now
         {
             if ((this.timeslot[day][masa] == null)) {
                 return true;
@@ -101,12 +101,22 @@ public class Timetable {
 
     boolean isRightEmpty(int day, int time)
     {
-        int masa = time+1;
+        int masa;
+        if ((this.timeslot[day][time] != null))
+        {
+            masa = this.timeslot[day][time].getTime() + this.timeslot[day][time].getSubjectHour();
+
+        }
+        else
+        {
+            return  false;
+        }
 
         //Information temp = this.getTimeslot(day,time);
-        if(masa <10 && masa != 4 && masa !=5)
+        if(masa <10 && masa >=4)//!= 4 && masa !=5
         {
             if ((this.timeslot[day][masa] == null)) {
+
                 return true;
             }
         }
@@ -116,13 +126,13 @@ public class Timetable {
     void moveRight(int day, int time)
     {
         Information temp = this.getTimeslot(day,time);
-        int masa = time+1;
+        int masa = temp.getTime() + 1;//temp.getTime() + temp.getSubjectHour();
 
         if(temp != null)
         {
             if(isRightEmpty(day,time))
             {
-                clearTimeslot(day,time,temp.getSubjectHour());
+                clearTimeslot(temp.getDay(),temp.getTime(),temp.getSubjectHour());
                 setTimeslot(temp,day,masa,temp.getSubjectHour());
             }
             else
@@ -379,8 +389,10 @@ public class Timetable {
     {
         if(this.timeslot[day][time] != null)
         {
-            if(info.getSubjectCode().equalsIgnoreCase(this.timeslot[day][time].getSubjectCode()) &&
-                    info.getSubjectType()== this.timeslot[day][time].getSubjectType())
+            if(
+                    info.getSubjectCode().equalsIgnoreCase(this.timeslot[day][time].getSubjectCode()) &&
+                    info.getSubjectType()== this.timeslot[day][time].getSubjectType()
+                    )
             {
                 return  true;
             }

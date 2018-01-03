@@ -4,10 +4,12 @@ import java.util.ArrayList;
 public class GeneticAlgorithm {
 
     //PARAMETERS : I MAKE IT PUBLIC BECAUSE I WILL BE NEEDING IT EVERYWHERE
-    public final static int POPULATION_SIZE = 6;
-    public final static int GENERATION = 10;
+    public final static int POPULATION_SIZE = 8;
+    public final static int GENERATION = 50;
     //crossover rate = based on segment; 5/50;
     //mutation rate = based on condition;
+
+    public String storeResult = "";
 
     //---------------------------------------------------------------------
      //public Population pop[] = new Population[POPULATION_SIZE];
@@ -49,12 +51,19 @@ public class GeneticAlgorithm {
            pop.add(mating.getHighestPop());
            calculateAllFitness();
            sortPopulation();
+
+           Population temp = pop.get(0);
+
+           storeResult +=  "\nGeneration " + String.valueOf(i+1) +
+                            " : " + String.valueOf(temp.getPopulationFitness());
+
            pop.remove(pop.size()-1);
            printAllFitness();
            calculateAllSlotted();
 
            Thread.sleep(1000);
        }
+       System.out.println("\nRESULT\n" +storeResult);
     }
     private void sortPopulation()
     {
@@ -201,7 +210,14 @@ public class GeneticAlgorithm {
                 {
                     if(((timetable).getTimeslot(day,time)) != null)
                     {
-                        ((timetable).getTimeslot(day,time)).setFitness( 0);//clear lu, sebab di additive nnt makin banyak
+                        //((timetable).getTimeslot(day,time)).setFitness( 0);//clear lu, sebab di additive nnt makin banyak
+                        if((timetable).getTimeslot(day,time).getStudnum() > (timetable).getTimeslot(day,time).getKelasCap()){
+                            ((timetable).getTimeslot(day,time)).setFitness(1);
+                        }
+                        else
+                        {
+                            ((timetable).getTimeslot(day,time)).setFitness( 0);
+                        }
                     }
 
                     //pukul 12 - 2 denda

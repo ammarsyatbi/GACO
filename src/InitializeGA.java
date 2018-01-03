@@ -121,18 +121,20 @@ public class InitializeGA {
                                     !((Timetable) tKelasList.get(kelasIndexLab)).checkTimeslot(dayLab,timeLab,((Subject) subjectList.get(s)).getLabHour()) //labkelas
                                     );//bruteforcing randomly, please work
 
-                            //try 100 kali je
+                            //try 10000 kali je
                             //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
                             //FIND GROUP TIME SLOT
-                            for (int k = 0; (k < 100000 && !(((Timetable) tGroupList.get(t)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour()))); k++) {
+                            for (int k = 0; (k < 100000 && !(((Timetable) tGroupList.get(t)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour()))); k++)
+                            {
                                 if (!(((Timetable) tGroupList.get(t)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour()))) {
                                     dayTuto = new Random().nextInt(5);
                                     timeTuto = new Random().nextInt(11 - ((Subject) subjectList.get(s)).getTutoHour());
                                 }
                             }
                             //FIND CLASS TIMESLOT
-                            for (int k = 0; (k < 100000 && !((Timetable) tKelasList.get(kelasIndexTuto)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour())); k++) {
+                            for (int k = 0; (k < 100000 && !((Timetable) tKelasList.get(kelasIndexTuto)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour())); k++)
+                            {
                                 if (!((Timetable) tKelasList.get(kelasIndexTuto)).checkTimeslot(dayTuto, timeTuto, ((Subject) subjectList.get(s)).getTutoHour())) {
                                     kelasIndexTuto = rg.nextInt(tKelasList.size());
                                 }

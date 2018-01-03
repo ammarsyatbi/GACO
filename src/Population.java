@@ -12,6 +12,7 @@ public class Population {
     private ArrayList subjectList;
     private ArrayList lecturerList;
     private ArrayList kelasList;
+
     private ArrayList tGroupList;
     private ArrayList tLecturerList;
     private ArrayList tKelasList;
